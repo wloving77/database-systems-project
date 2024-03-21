@@ -15,9 +15,9 @@ Final Project Repo for Database Systems (CS 4750 UVA)
 
 ## Check containers are running:
 
-- Navigate to <http://localhost:8080/>
-- Navigate to <http://localhost:3000/>
-- Navigate to <http://localhost:3000/testDB>
+- Frontend: Navigate to <http://localhost:8080/>
+- Backend: Navigate to <http://localhost:3000/>
+- Database: Navigate to <http://localhost:3000/testDB>
 
 ## You're up and running!
 
