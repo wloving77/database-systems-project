@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    volumes:
+      - ./frontend:/var/www/html
+    ports:
+      - "8080:80"
+    networks:
+      - potd5network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    env_file:
+      - ./.env
+    volumes:
+      - ./backend/:/app/
+    ports:
+      - "3000:3000"
+    networks:
+      - potd5network
+
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    volumes:
+      - ./db/maintenance_system.sql:/docker-entrypoint-initdb.d/init-db.sql
+      - ./db/database-volume:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE}
+    ports:
+      - "3306:3306"
+    networks:
+      - potd5network
+
+networks:
+  potd5network:
+    driver: bridge

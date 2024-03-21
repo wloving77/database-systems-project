@@ -1,0 +1,14 @@
+FROM node:latest
+
+WORKDIR /app
+
+ADD ./backend/server.js .
+ADD ./backend/package.json .
+ADD ./backend/package-lock.json .
+
+RUN npm install --verbose
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
+

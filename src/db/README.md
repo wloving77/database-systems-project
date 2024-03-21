@@ -1,0 +1,2 @@
+# Here is the database layer:
+- Here we will write raw .sql scripts that will initialize the state of the database every time the container is run. Currently I have a volume mounted in `persistent-data-volume-mount/` so any inserts into the database will be saved, you can turn this off in the docker-compose.yml file at `src/docker-compose.yml`
