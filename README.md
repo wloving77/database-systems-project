@@ -10,8 +10,8 @@ Final Project Repo for Database Systems (CS 4750 UVA)
 
 ## Run these commands in src/
 
-- docker-compose build --no-cache
-- docker-compose up
+- `docker-compose build --no-cache`
+- `docker-compose up`
 
 ## Check containers are running:
 
