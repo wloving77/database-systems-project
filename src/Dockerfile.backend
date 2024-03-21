@@ -6,7 +6,7 @@ ADD ./backend/server.js .
 ADD ./backend/package.json .
 ADD ./backend/package-lock.json .
 
-RUN npm install --verbose
+RUN npm install
 
 EXPOSE 3000
 

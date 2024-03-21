@@ -6,9 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile.frontend
     volumes:
-      - ./frontend:/var/www/html
+      - ./frontend/:/var/www/html
     ports:
-      - "8080:80"
+      - 8080:${FRONTEND_PORT}
     networks:
       - potd5network
 
@@ -21,7 +21,7 @@ services:
     volumes:
       - ./backend/:/app/
     ports:
-      - "3000:3000"
+      - ${BACKEND_PORT}:${BACKEND_PORT}
     networks:
       - potd5network
 
@@ -38,7 +38,7 @@ services:
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - MYSQL_DATABASE=${DB_DATABASE}
     ports:
-      - "3306:3306"
+      - 3306:3306
     networks:
       - potd5network
 
