@@ -2,10 +2,11 @@ FROM node:20.11.1
 
 WORKDIR /app
 
-COPY ./backend/server.js ./
 COPY ./backend/package*.json ./
 
 RUN npm install --verbose
+
+COPY ./backend/src/* /app/src/
 
 EXPOSE 3000
 

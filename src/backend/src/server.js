@@ -1,4 +1,11 @@
-//Necessary Node Libraries, Express for Routes, Mysql2 for MySQL connection and CORS to allow communication with frontend.
+/* 
+
+This file is the global server.js file that will be executed when the container is run, all other directories and files will handle actual business logic
+
+See this file as the core and all actual code as imports like python.
+
+*/
+
 const express = require("express");
 const mysql = require("mysql2/promise");
 const cors = require("cors");
@@ -7,10 +14,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+//http://localhost:3000/
 app.get("/", (req, res) => {
   res.send("Hello From Node JS Backend!");
 });
 
+//creates a connection pool with MySQL, more efficient then creating a connection for every request.
 const pool = mysql.createPool({
   connectionLimit: 10, // This is the max number of connections in the pool
   host: process.env.DB_HOST,
@@ -20,7 +29,7 @@ const pool = mysql.createPool({
   port: process.env.DB_PORT,
 });
 
-//simple route to validate DB credentials and that you can connect
+//http://localhost:3000/testDB
 app.get("/testDB", (req, res) => {
   try {
     const connection = mysql.createConnection({
@@ -57,3 +66,18 @@ process.on("SIGTERM", async () => {
   await pool.end();
   process.exit(0);
 });
+
+/* 
+
+
+External Routes Imported Below:
+
+Routes (Likely Most of the Tables):
+- Users
+- Grades etc..
+
+
+*/
+
+const userRoutes = require("./routes/userRoutes.js");
+app.use("/user", userRoutes);
