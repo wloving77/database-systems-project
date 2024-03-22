@@ -39,7 +39,9 @@ app.get("/testDB", (req, res) => {
 
 // Make the app listen on port 3000
 app.listen(3000, () => {
-  console.log(`Server is running on http://${process.env.BACKEND_HOST}:${process.env.BACKEND_PORT}`);
+  console.log(
+    `Server is running on http://${process.env.BACKEND_HOST}:${process.env.BACKEND_PORT}`
+  );
 });
 
 //graceful shutdown of database connections:

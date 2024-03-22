@@ -1,6 +1,6 @@
 # Database Systems Project
-Final Project Repo for Database Systems (CS 4750 UVA)
 
+Final Project Repo for Database Systems (CS 4750 UVA)
 
 # Setup Guide:
 
