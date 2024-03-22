@@ -68,15 +68,11 @@ process.on("SIGTERM", async () => {
 });
 
 /* 
-
-
 External Routes Imported Below:
 
 Routes (Likely Most of the Tables):
 - Users
 - Grades etc..
-
-
 */
 
 const userRoutes = require("./routes/userRoutes.js");
