@@ -30,7 +30,7 @@ services:
       context: .
       dockerfile: Dockerfile.db
     volumes:
-      - ./db/maintenance_system.sql:/docker-entrypoint-initdb.d/init-db.sql
+      - ./db/init_scripts/:/docker-entrypoint-initdb.d
       - ./db/database-volume:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
