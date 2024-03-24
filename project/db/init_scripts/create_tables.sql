@@ -1,7 +1,7 @@
 USE projectDatabase;
 
 CREATE TABLE Users(
-    username VARCHAR(255) PRIMARY KEY,
+    username VARCHAR(255) PRIMARY KEY CHECK (username <> ''),
     password_hash VARCHAR(255) NOT NULL CHECK (password_hash <> ''),
     first_name VARCHAR(255),
     last_name VARCHAR(255) 
