@@ -9,20 +9,24 @@ BEGIN
     DECLARE totalEarned FLOAT;
     DECLARE totalPossible FLOAT;
     DECLARE finalGrade FLOAT;
+    DECLARE curClassId INT;
+
+    -- Retrieve class_id using assignment_id from the newly inserted row
+    SELECT a.class_id INTO curClassId FROM Assignments a WHERE a.assignment_id = NEW.assignment_id;
 
     -- Calculate total earned points and total possible points for the student in the class
-    SELECT SUM(points_earned), SUM(total_points)
+    SELECT SUM(uag.points_earned), SUM(a.total_points)
     INTO totalEarned, totalPossible
     FROM Assignments a
     JOIN User_Assignment_Grades uag ON a.assignment_id = NEW.assignment_id
-    WHERE a.class_id = NEW.class_id AND uag.username = NEW.username;
+    WHERE a.class_id = curClassId AND uag.username = NEW.username;
 
     -- Calculate final grade as percentage
     SET finalGrade = (totalEarned / totalPossible) * 100;
 
     -- Update or insert final grade into User_Class_Grades
     INSERT INTO User_Class_Grades (class_id, username, grade)
-    VALUES (NEW.class_id, NEW.username, finalGrade)
+    VALUES (curClassId, NEW.username, finalGrade)
     ON DUPLICATE KEY UPDATE grade = finalGrade;
 END$$
 
