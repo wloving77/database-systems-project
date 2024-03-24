@@ -29,3 +29,25 @@ INSERT INTO User_Assignment_Grades (assignment_id, username, points_earned, grad
 (2, 'jdoe', 180, 90),
 (1, 'asmith', 85, 85),
 (3, 'jdoe', 140, 93);
+
+INSERT INTO User_Category_Grades (class_id, category, username, points_earned, total_points, grade) VALUES
+(1, 'hwk', 'jdoe', 90, 100, 90),
+(1, 'exam', 'jdoe', 180, 200, 90),
+(1, 'hwk', 'asmith', 85, 100, 85),
+(2, 'project', 'jdoe', 140, 150, 93);
+
+INSERT INTO Category_Average_Grades (class_id, category, grade) VALUES
+(1, 'hwk', 87.5),
+(1, 'exam', 90),
+(2, 'project', 93);
+-- (3, 'lab', 0) Nobody has actually completed the 'lab' category assignment.
+
+INSERT INTO User_Class_Grades (class_id, username, grade) VALUES 
+(1, 'jdoe', 90),
+(1, 'asmith', 85),
+(2, 'jdoe', 93);
+
+INSERT INTO Class_Average_Grades (class_id, grade) VALUES 
+(1, 88.75), 
+(2, 93);
+-- (3, 0) Nobody has actually completed the 'lab' category assignment.
