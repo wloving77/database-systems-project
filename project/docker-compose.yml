@@ -10,7 +10,7 @@ services:
     ports:
       - "8080:${FRONTEND_PORT}"
     networks:
-      - potd5network
+      - projectNetwork
 
   backend:
     build:
@@ -23,7 +23,7 @@ services:
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
     networks:
-      - potd5network
+      - projectNetwork
 
   db:
     build:
@@ -31,7 +31,7 @@ services:
       dockerfile: Dockerfile.db
     volumes:
       - ./db/init_scripts/:/docker-entrypoint-initdb.d
-      - ./db/database-volume:/var/lib/mysql
+    #      - ./db/database-volume:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
       - MYSQL_USER=${DB_USER}
@@ -40,8 +40,8 @@ services:
     ports:
       - "3306:3306"
     networks:
-      - potd5network
+      - projectNetwork
 
 networks:
-  potd5network:
+  projectNetwork:
     driver: bridge

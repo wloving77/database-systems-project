@@ -30,10 +30,10 @@ const pool = mysql.createPool({
 });
 
 //http://localhost:3000/testDB
-app.get("/testDB", (req, res) => {
+app.get("/testDB", async (req, res) => {
   try {
-    const connection = mysql.createConnection({
-      host: process.env.DB_HOST,
+    const connection = await mysql.createConnection({
+      host: process.env.DB_HOST_DOCKER,
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
@@ -43,6 +43,7 @@ app.get("/testDB", (req, res) => {
     res.send("Successfully Connected to the Database!");
   } catch (error) {
     console.log(error);
+    res.send("Failed to Establish Database Connection, Check Backend Logs");
   }
 });
 
