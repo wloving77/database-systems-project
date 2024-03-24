@@ -8,7 +8,7 @@ Final Project Repo for Database Systems (CS 4750 UVA)
 
 - Download: <https://www.docker.com/products/docker-desktop/>
 
-## Run these commands in src/
+## Run these commands in ./project/
 
 - `docker-compose build --no-cache`
 - `docker-compose up`
@@ -18,6 +18,7 @@ Final Project Repo for Database Systems (CS 4750 UVA)
 - Frontend: Navigate to <http://localhost:8080/>
 - Backend: Navigate to <http://localhost:3000/>
 - Database: Navigate to <http://localhost:3000/testDB>
+- You should be able to see all the running containers in docker desktop under containers
 
 ## You're up and running!
 
