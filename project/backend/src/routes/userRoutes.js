@@ -1,10 +1,15 @@
 const express = require("express");
 const router = express.Router();
+const userController = require("../controllers/userController");
 
-// Define a GET route
-router.get("/signup", (req, res) => {
-  res.send("This is an example signup route!");
-});
+module.exports = function (pool) {
+  router.get("/signup", (req, res) => {
+    res.send("This is an example signup route!");
+  });
 
-//this is essential:
-module.exports = router;
+  router.get("/get/:username", userController.getUserByUsername(pool));
+
+  router.get("/all", userController.getUsers(pool));
+
+  return router;
+};

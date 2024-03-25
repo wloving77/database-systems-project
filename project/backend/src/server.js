@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 //creates a connection pool with MySQL, more efficient then creating a connection for every request.
 const pool = mysql.createPool({
   connectionLimit: 10, // This is the max number of connections in the pool
-  host: process.env.DB_HOST,
+  host: process.env.DB_HOST_DOCKER,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
@@ -32,13 +32,7 @@ const pool = mysql.createPool({
 //http://localhost:3000/testDB
 app.get("/testDB", async (req, res) => {
   try {
-    const connection = await mysql.createConnection({
-      host: process.env.DB_HOST_DOCKER,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_DATABASE,
-      port: process.env.DB_PORT,
-    });
+    const connection = await pool.getConnection();
 
     res.send("Successfully Connected to the Database!");
   } catch (error) {
@@ -77,4 +71,4 @@ Routes (Likely Most of the Tables):
 */
 
 const userRoutes = require("./routes/userRoutes.js");
-app.use("/user", userRoutes);
+app.use("/user", userRoutes(pool));
