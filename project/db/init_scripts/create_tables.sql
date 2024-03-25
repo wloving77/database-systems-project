@@ -1,7 +1,7 @@
 USE projectDatabase;
 
 CREATE TABLE Users(
-    username VARCHAR(255) PRIMARY KEY,
+    username VARCHAR(255) PRIMARY KEY CHECK (username <> ''),
     password_hash VARCHAR(255) NOT NULL CHECK (password_hash <> ''),
     first_name VARCHAR(255),
     last_name VARCHAR(255) 
@@ -15,23 +15,23 @@ CREATE TABLE Classes(
 CREATE TABLE User_Classes (
     username VARCHAR(255),
     class_id int,
-    PRIMARY KEY (username, class_title),
+    PRIMARY KEY (username, class_id),
     FOREIGN KEY (username) REFERENCES Users(username),
     FOREIGN KEY (class_id) REFERENCES Classes(class_id)
 );
 
 CREATE TABLE Assignments (
-    assignment_id INT PRIMARY KEY,
+    assignment_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255),
     class_id INT,
     category VARCHAR(255),
     total_points FLOAT,
-    UNIQUE (class_title, title),
+    UNIQUE (class_id, title),
     FOREIGN KEY (class_id) REFERENCES User_Classes(class_id)
 );
 
 CREATE TABLE User_Assignment_Grades (
-    assignment_id INT,
+    assignment_id INT AUTO_INCREMENT,
     username VARCHAR(255),
     points_earned FLOAT,
     grade FLOAT,
@@ -44,12 +44,11 @@ CREATE TABLE User_Category_Grades (
     class_id INT,
     category VARCHAR(255),
     username VARCHAR(255),
-    total_points FLOAT,
     points_earned FLOAT,
+    total_points FLOAT,
     grade FLOAT,
     PRIMARY KEY (class_id, category, username),
     FOREIGN KEY (class_id) REFERENCES Classes(class_id),
-    FOREIGN KEY (category) REFERENCES Assignments(category),
     FOREIGN KEY (username) REFERENCES Users(username)
 );
 
