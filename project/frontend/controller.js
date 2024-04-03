@@ -17,62 +17,43 @@ function handleFormSubmit(event) {
   // Check form validity
   if (!form.checkValidity()) {
     event.stopPropagation();
-    return;
-  }
+  } else {
+    // Get the username and entered password
+    var username = form.querySelector("#input-username").value;
+    var enteredPassword = form.querySelector("#input-password").value;
+    var errorMsg = document.getElementById("error-message");
 
-  // Get the username and entered password
-  var username = form.querySelector("#input-username").value;
-  var enteredPassword = form.querySelector("#input-password").value;
+    // Perform AJAX request to get user data
+    axios
+      .get("http://localhost:3000/user/get/" + username)
+      .then(function (response) {
+        var user = response.data;
 
-  // Perform AJAX request to get user data
-  axios
-    .get("http://localhost:3000/user/get/" + username)
-    .then(function (response) {
-      var user = response.data;
+        // can add hashing later once the test data has actual hashes
+        //   const hashedPassword = crypto
+        //     .createHash("sha256")
+        //     .update(enteredPassword)
+        //     .digest("hex");
 
-      // can add hashing later once the test data has actual hashes
-      //   const hashedPassword = crypto
-      //     .createHash("sha256")
-      //     .update(enteredPassword)
-      //     .digest("hex");
-
-      if (user && user.password_hash === enteredPassword) {
-        // Set user in localStorage
-        window.localStorage.setItem("user", username);
-        console.log("Successfully logged in");
-        location.reload();
-      } else {
-        console.log("Passwords do not match.");
-      }
-    })
-    .catch(function (error) {
-      console.error("Error fetching user data:", error);
-    });
-}
-
-// validate input -- not working
-(function () {
-  "use strict";
-
-  // Fetch all the forms we want to apply custom Bootstrap validation styles to
-  var forms = document.querySelectorAll(".needs-validation");
-
-  // Loop over them and prevent submission
-  Array.prototype.slice.call(forms).forEach(function (form) {
-    form.addEventListener(
-      "submit",
-      function (event) {
-        if (!form.checkValidity()) {
-          event.preventDefault();
-          event.stopPropagation();
+        if (user && user.password_hash === enteredPassword) {
+          // Set user in localStorage
+          window.localStorage.setItem("user", username);
+          console.log("Successfully logged in");
+          location.reload();
+        } else {
+          errorMsg.innerHTML = "Incorrect password";
+          errorMsg.style.display = "block";
         }
-
-        form.classList.add("was-validated");
-      },
-      false
-    );
-  });
-})();
+      })
+      .catch(function (error) {
+        console.error("Error fetching user data:", error);
+        errorMsg.innerHTML = "No user with that username";
+        errorMsg.style.display = "block";
+      });
+  }
+  errorMsg.style.display = "none";
+  form.classList.add("was-validated");
+}
 
 // logout user
 function handleLogout() {

@@ -8,7 +8,6 @@
     />
     <link href="./styles/main.less" rel="stylesheet" />
     <script src="controller.js"></script>
-    <script src="login.js"></script>
   </head>
   <body>
     <div id="navbar-container"></div>
@@ -23,11 +22,13 @@
     <script>
       var loggedInUser = window.localStorage.getItem("user");
       loadComponent("./components/navbar.html", "navbar-container");
-      !loggedInUser &&
-        loadComponent("./components/login.html", "login-container");
-      if (loggedInUser)
+
+      if (loggedInUser) {
         document.getElementById("logout-button").style.display = "block";
-      else document.getElementById("logout-button").style.display = "none";
+      } else {
+        loadComponent("./components/login.html", "login-container");
+        document.getElementById("logout-button").style.display = "none";
+      }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
