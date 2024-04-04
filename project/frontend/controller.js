@@ -80,10 +80,12 @@ function getUserClasses() {
       var list = document.getElementById("classes-list");
 
       classes.forEach(function (classInfo) {
-        var listItem = document.createElement("li");
-        listItem.classList.add("list-group-item");
-        listItem.textContent = classInfo.class_title;
-        list.appendChild(listItem);
+        var link = document.createElement("a");
+        link.className = "list-group-item list-group-item-action";
+        link.href = "/class.html?class=" + classInfo.class_id;
+        link.classList.add("list-group-item");
+        link.textContent = classInfo.class_title;
+        list.appendChild(link);
       });
     })
     .catch(function (error) {

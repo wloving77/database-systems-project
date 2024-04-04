@@ -7,5 +7,7 @@ module.exports = function (pool) {
 
   router.get("/all", classesController.getAllClasses(pool));
 
+  router.get("/class/:id", classesController.getClassById(pool));
+
   return router;
 };
