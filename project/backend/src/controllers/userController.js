@@ -21,6 +21,11 @@ const getUserByUsername = (pool) => async (req, res) => {
   }
 };
 
+//gonna do the password comparison here:
+const handleUserLogin = (pool) => async (req, res) => {
+  return 0;
+};
+
 module.exports = {
   getUsers,
   getUserByUsername,

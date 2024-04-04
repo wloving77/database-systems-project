@@ -11,5 +11,7 @@ module.exports = function (pool) {
 
   router.get("/all", userController.getUsers(pool));
 
+  router.post("/login", userController.handleUserLogin(pool));
+
   return router;
 };
