@@ -72,3 +72,6 @@ Routes (Likely Most of the Tables):
 
 const userRoutes = require("./routes/userRoutes.js");
 app.use("/user", userRoutes(pool));
+
+const classesRoutes = require("./routes/classesRoutes.js");
+app.use("/classes", classesRoutes(pool));
