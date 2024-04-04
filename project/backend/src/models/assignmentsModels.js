@@ -15,7 +15,7 @@ async function getAllAssignments(pool) {
 }
 
 async function getAssignmentsByUsername(pool, username) {
-  const sqlFilePath = path.join(__dirname, "userAssignments.sql");
+  const sqlFilePath = path.join(__dirname, "sql_scripts/userAssignments.sql");
   const sqlQuery = fs.readFileSync(sqlFilePath, "utf8");
 
   try {

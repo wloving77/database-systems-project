@@ -8,8 +8,9 @@
       rel="stylesheet"
     />
     <link href="./styles/main.less" rel="stylesheet" />
-    <!-- controller -->
-    <script src="controller.js"></script>
+    <!-- JS File Imports:  -->
+    <script src="./js/ui.js"></script>
+    <script src="./js/auth.js"></script>
   </head>
   <body>
     <!-- navbar -->
@@ -72,7 +73,7 @@
               id="login-form"
               class="needs-validation"
               novalidate
-              onsubmit="handleFormSubmit(event)"
+              onsubmit="auth.handleLogin(event)"
             >
               <div class="mb-3">
                 <label for="input-username" class="form-label">Username</label>
@@ -137,16 +138,12 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        var loggedInUser = window.sessionStorage.getItem("user");
-        var profileBtn = document.getElementById("profile");
-        profileBtn.innerHTML = loggedInUser ? "Logout" : "Login";
-        profileBtn.setAttribute("data-bs-toggle", loggedInUser ? "" : "modal");
-        profileBtn.setAttribute("data-bs-target", loggedInUser ? "" : "#modal");
+        const loggedInUser = window.sessionStorage.getItem("user");
+
         if (loggedInUser) {
-          profileBtn.setAttribute("onclick", "handleLogout()");
-          displayUserClasses();
-          displayUserAssignments();
-          document.getElementById("username").value = loggedInUser;
+          uiAuth.updateUIForLoggedInUser(loggedInUser);
+        } else {
+          uiAuth.updateUIForLoggedOutUser();
         }
       });
     </script>

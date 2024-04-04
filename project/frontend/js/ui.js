@@ -1,4 +1,4 @@
-// load components from html files
+// helper function to load components from html files
 function loadComponent(componentUrl, containerId) {
   fetch(componentUrl)
     .then((response) => response.text())
@@ -8,63 +8,11 @@ function loadComponent(componentUrl, containerId) {
     .catch((error) => console.error(error));
 }
 
-// handle login user
-function handleFormSubmit(event) {
-  event.preventDefault();
-
-  var form = event.target;
-
-  // Check form validity
-  if (!form.checkValidity()) {
-    event.stopPropagation();
-  } else {
-    // Get the username and entered password
-    var username = form.querySelector("#input-username").value;
-    var enteredPassword = form.querySelector("#input-password").value;
-    var errorMsg = document.getElementById("error-message");
-
-    // Perform AJAX request to get user data
-    axios
-      .get("http://localhost:3000/user/get/" + username)
-      .then(function (response) {
-        var user = response.data;
-
-        // can add hashing later once the test data has actual hashes
-        //   const hashedPassword = crypto
-        //     .createHash("sha256")
-        //     .update(enteredPassword)
-        //     .digest("hex");
-
-        if (user && user.password_hash === enteredPassword) {
-          // Set user in sessionStorage
-          window.sessionStorage.setItem("user", username);
-          console.log("Successfully logged in");
-          location.reload();
-        } else {
-          errorMsg.innerHTML = "Incorrect password";
-          errorMsg.style.display = "block";
-        }
-      })
-      .catch(function (error) {
-        console.error("Error fetching user data:", error);
-        errorMsg.innerHTML = "No user with that username";
-        errorMsg.style.display = "block";
-      });
-  }
-  errorMsg.style.display = "none";
-  form.classList.add("was-validated");
-}
-
-// logout user
-function handleLogout() {
-  window.sessionStorage.removeItem("user");
-  location.reload();
-}
-
-function displayUserClasses() {
-  var username = window.sessionStorage.getItem("user");
+//used primarily in index.html on authenticated page load
+function displayUserClasses(user) {
+  var user = window.sessionStorage.getItem("user");
   axios
-    .get("http://localhost:3000/classes/get/" + username)
+    .get("http://localhost:3000/classes/get/" + user)
     .then(function (response) {
       var classes = response.data;
 
@@ -73,7 +21,7 @@ function displayUserClasses() {
       classes.forEach(function (classInfo) {
         var link = document.createElement("a");
         link.className = "list-group-item list-group-item-action";
-        link.href = "/class.html?class=" + classInfo.class_id;
+        link.href = "./pages/class.html?class=" + classInfo.class_id;
         link.classList.add("list-group-item");
         link.textContent = classInfo.class_title;
         list.appendChild(link);
@@ -84,6 +32,7 @@ function displayUserClasses() {
     });
 }
 
+//used primarily in ./pages/class.html on page load
 function displayClass(class_id) {
   axios
     .get("http://localhost:3000/classes/class/" + class_id)
@@ -97,10 +46,11 @@ function displayClass(class_id) {
     });
 }
 
-function displayUserAssignments() {
-  var username = window.sessionStorage.getItem("user");
+//used primarily in index.html on authenticated page load
+function displayUserAssignments(user) {
+  var user = window.sessionStorage.getItem("user");
   axios
-    .get("http://localhost:3000/assignments/get/" + username)
+    .get("http://localhost:3000/assignments/get/" + user)
     .then(function (response) {
       var assignments = response.data;
       var table = document.getElementById("assignments-table");
