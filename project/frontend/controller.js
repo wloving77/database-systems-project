@@ -61,16 +61,7 @@ function handleLogout() {
   location.reload();
 }
 
-function handleLoginLogic() {
-  var loggedInUser = window.sessionStorage.getItem("user");
-  var profileBtn = document.getElementById("profile");
-  profileBtn.innerHTML = loggedInUser ? "Logout" : "Login";
-  profileBtn.setAttribute("data-bs-toggle", loggedInUser ? "" : "modal");
-  profileBtn.setAttribute("data-bs-target", loggedInUser ? "" : "#modal");
-  loggedInUser && profileBtn.setAttribute("onclick", "handleLogout()");
-}
-
-function getUserClasses() {
+function displayUserClasses() {
   var username = window.sessionStorage.getItem("user");
   axios
     .get("http://localhost:3000/classes/get/" + username)
@@ -93,14 +84,26 @@ function getUserClasses() {
     });
 }
 
-function getUserAssignments() {
+function displayClass(class_id) {
+  axios
+    .get("http://localhost:3000/classes/class/" + class_id)
+    .then(function (response) {
+      thisClass = response.data;
+
+      document.getElementById("title").textContent = thisClass.class_title;
+    })
+    .catch(function (error) {
+      console.error("Error fetching class data:", error);
+    });
+}
+
+function displayUserAssignments() {
   var username = window.sessionStorage.getItem("user");
   axios
     .get("http://localhost:3000/assignments/get/" + username)
     .then(function (response) {
       var assignments = response.data;
       var table = document.getElementById("assignments-table");
-      console.log(table);
 
       assignments.forEach(function (assignmentInfo) {
         var row = document.createElement("tr");

@@ -53,43 +53,42 @@
             ></button>
           </div>
           <div class="modal-body" id="login-container">
-             <div
-          class="alert alert-danger"
-          id="error-message"
-          style="display: none"
-        ></div>
-        <h6 class="card-subtitle mb-2 text-muted">
-          Please enter your username and password
-        </h6>
-        <form
-          id="login-form"
-          class="needs-validation"
-          novalidate
-          onsubmit="handleFormSubmit(event)"
-        >
-          <div class="mb-3">
-            <label for="input-username" class="form-label">Username</label>
-            <input
-              type="text"
-              class="form-control"
-              id="input-username"
-              required
-            />
-            <div class="invalid-feedback">Please enter a username</div>
-          </div>
-          <div class="mb-3">
-            <label for="input-password" class="form-label">Password</label>
-            <input
-              type="password"
-              class="form-control"
-              id="input-password"
-              required
-            />
-            <div class="invalid-feedback">Please enter a password</div>
-          </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-      </div>
+            <div
+              class="alert alert-danger"
+              id="error-message"
+              style="display: none"
+            ></div>
+            <h6 class="card-subtitle mb-2 text-muted">
+              Please enter your username and password
+            </h6>
+            <form
+              id="login-form"
+              class="needs-validation"
+              novalidate
+              onsubmit="handleFormSubmit(event)"
+            >
+              <div class="mb-3">
+                <label for="input-username" class="form-label">Username</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="input-username"
+                  required
+                />
+                <div class="invalid-feedback">Please enter a username</div>
+              </div>
+              <div class="mb-3">
+                <label for="input-password" class="form-label">Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="input-password"
+                  required
+                />
+                <div class="invalid-feedback">Please enter a password</div>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
           </div>
         </div>
       </div>
@@ -110,19 +109,17 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Your Assignments</h5>
-              <ul class="list-group list-group-flush" id="assignments-list"></ul>
               <table class="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">ID</th>
-                      <th scope="col">Title</th>
-                      <th scope="col">Points Earned</th>
-                      <th scope="col">Grade</th>
-                      <th scope="col">Class</th>
-                    </tr>
-                  </thead>
-                  <tbody id="assignments-table">
-                  </tbody>
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Points Earned</th>
+                    <th scope="col">Grade</th>
+                    <th scope="col">Class</th>
+                  </tr>
+                </thead>
+                <tbody id="assignments-table"></tbody>
               </table>
             </div>
           </div>
@@ -131,9 +128,16 @@
     </div>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        handleLoginLogic();
-        getUserClasses();
-        getUserAssignments();
+        var loggedInUser = window.sessionStorage.getItem("user");
+        var profileBtn = document.getElementById("profile");
+        profileBtn.innerHTML = loggedInUser ? "Logout" : "Login";
+        profileBtn.setAttribute("data-bs-toggle", loggedInUser ? "" : "modal");
+        profileBtn.setAttribute("data-bs-target", loggedInUser ? "" : "#modal");
+        if (loggedInUser) {
+          profileBtn.setAttribute("onclick", "handleLogout()");
+          displayUserClasses();
+          displayUserAssignments();
+        }
       });
     </script>
 
