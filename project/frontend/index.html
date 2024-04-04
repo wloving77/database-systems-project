@@ -95,16 +95,45 @@
       </div>
     </div>
 
-    <h1>Welcome to the Grade Calculator!</h1>
-
+    <div class="container-fluid">
+      <h1 class="display-3">Welcome to the Grade Calculator!</h1>
+      <div class="col">
+        <div class="row py-3">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Your Classes</h5>
+              <ul class="list-group list-group-flush" id="classes-list"></ul>
+            </div>
+          </div>
+        </div>
+        <div class="row py-3">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Your Assignments</h5>
+              <ul class="list-group list-group-flush" id="assignments-list"></ul>
+              <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Title</th>
+                      <th scope="col">Points Earned</th>
+                      <th scope="col">Grade</th>
+                      <th scope="col">Class</th>
+                    </tr>
+                  </thead>
+                  <tbody id="assignments-table">
+                  </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        var loggedInUser = window.localStorage.getItem("user");
-        var profileBtn = document.getElementById("profile");
-        profileBtn.innerHTML = loggedInUser ? "Logout" : "Login";
-        profileBtn.setAttribute("data-bs-toggle", loggedInUser ? "" : "modal");
-        profileBtn.setAttribute("data-bs-target", loggedInUser ? "" : "#modal");
-        loggedInUser && profileBtn.setAttribute("onclick", "handleLogout()");
+        handleLoginLogic();
+        getUserClasses();
+        getUserAssignments();
       });
     </script>
 
