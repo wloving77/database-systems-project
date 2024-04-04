@@ -1,3 +1,15 @@
+async function getAllClasses(pool) {
+  try {
+    const [rows, fields] = await pool.query("SELECT * FROM Classes;");
+    if (rows.length > 0) {
+      return rows;
+    } else {
+      throw new Error(`No classes found`);
+    }
+  } catch (error) {
+    throw error;
+  }
+}
 async function getClassesByUsername(pool, username) {
   try {
     const [rows, fields] = await pool.query(
@@ -5,7 +17,7 @@ async function getClassesByUsername(pool, username) {
       [username]
     );
     if (rows.length > 0) {
-      return rows[0];
+      return rows;
     } else {
       throw new Error(`${userId} has no classes`);
     }
@@ -15,5 +27,6 @@ async function getClassesByUsername(pool, username) {
 }
 
 module.exports = {
+  getAllClasses,
   getClassesByUsername,
 };
