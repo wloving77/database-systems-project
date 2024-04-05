@@ -57,10 +57,69 @@ const auth = {
     location.reload();
   },
 
+  async handleSignup(event) {
+    event.preventDefault();
+
+    const form = event.target;
+
+    const errorMsg = document.getElementById("error-message");
+
+    if (!form.checkValidity()) {
+      errorMsg.innerHTML = "Please Fill Out All Fields";
+      errorMsg.style.display = "block";
+      return;
+    }
+
+    //prepare and send post request to backend, backend returns a valid username
+    const username = form.querySelector("#input-username-signup").value;
+    const enteredPassword = form.querySelector("#input-password-signup").value;
+    const enteredPasswordCheck = form.querySelector(
+      "#input-password-check-signup"
+    ).value;
+    const first_name = form.querySelector("#input-firstname-signup").value;
+    const last_name = form.querySelector("#input-lastname-signup").value;
+
+    if (enteredPassword !== enteredPasswordCheck) {
+      errorMsg.innerHTML = "Password and Confirm Password Must Match";
+      errorMsg.style.display = "block";
+      return;
+    }
+
+    const authData = {
+      username: username,
+      password: enteredPassword,
+      first_name: first_name,
+      last_name: last_name,
+    };
+
+    const url = "http://localhost:3000/user/signup";
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(authData),
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Error Processing Signup Request, Server Responded With ${response.status}`
+      );
+    }
+
+    const responseData = await response.json();
+
+    //set session storage:
+    window.sessionStorage.setItem("user", responseData.username);
+    errorMsg.style.display = "none";
+    location.reload();
+  },
+
   // logout user
   async handleLogout() {
     window.sessionStorage.removeItem("user");
-    //location.reload();
+    location.reload();
   },
 };
 
@@ -75,16 +134,20 @@ const uiAuth = {
       const loginForm = document.getElementById("login-form");
       const signupForm = document.getElementById("signup-form");
       const modalTitle = document.getElementById("modal-title");
-      modalTitle.innerHTML = "Login";
+      const modalHeader = document.getElementById("modal-header");
       loginForm.style.display = "block";
       signupForm.style.display = "none";
+      modalTitle.innerHTML = "Login";
+      modalHeader.innerHTML = "Please Enter your Username and Password";
     } else if (target_id == "profile_signup") {
       const loginForm = document.getElementById("login-form");
       const signupForm = document.getElementById("signup-form");
       const modalTitle = document.getElementById("modal-title");
-      modalTitle.innerHTML = "Signup";
+      const modalHeader = document.getElementById("modal-header");
       loginForm.style.display = "none";
       signupForm.style.display = "block";
+      modalTitle.innerHTML = "Signup";
+      modalHeader.innerHTML = "Please Choose a Username and Password";
     }
 
     return;

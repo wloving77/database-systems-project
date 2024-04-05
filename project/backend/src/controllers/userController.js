@@ -25,12 +25,11 @@ const getUserByUsername = (pool) => async (req, res) => {
 const handleUserLogin = (pool) => {
   return async (req, res) => {
     try {
+      console.log(req.body);
       const { username, password } = req.body;
 
       const user = await userModel.getUserByUsername(pool, username);
       const hashedPassword = user.password_hash;
-
-      console.log(hashedPassword);
 
       /* Here is where hashing would happen, we'd hash the sent password and ensure it matches our db's hash */
       const sentPasswordHashed = password;
@@ -46,13 +45,33 @@ const handleUserLogin = (pool) => {
   };
 };
 
-const handleUserLogout = (pool) => async (req, res) => {
-  return 0;
+const handleUserSignup = (pool) => {
+  return async (req, res) => {
+    try {
+      const { username, password, first_name, last_name } = req.body;
+
+      /* HERE WE WOULD HASH THE PASSWORD */
+
+      const password_hash = password;
+
+      const user = await userModel.insertNewUser(
+        pool,
+        username,
+        password_hash,
+        first_name,
+        last_name
+      );
+
+      res.json({ username: user });
+    } catch (error) {
+      res.status(500);
+    }
+  };
 };
 
 module.exports = {
   getUsers,
   getUserByUsername,
   handleUserLogin,
-  handleUserLogout,
+  handleUserSignup,
 };

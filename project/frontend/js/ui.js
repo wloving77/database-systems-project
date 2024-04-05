@@ -9,27 +9,37 @@ function loadComponent(componentUrl, containerId) {
 }
 
 //used primarily in index.html on authenticated page load
-function displayUserClasses(user) {
-  var user = window.sessionStorage.getItem("user");
-  axios
-    .get("http://localhost:3000/classes/get/" + user)
-    .then(function (response) {
-      var classes = response.data;
+async function displayUserClasses(user) {
+  const url = "http://localhost:3000/classes/get/" + user;
 
-      var list = document.getElementById("classes-list");
-
-      classes.forEach(function (classInfo) {
-        var link = document.createElement("a");
-        link.className = "list-group-item list-group-item-action";
-        link.href = "./pages/class.html?class=" + classInfo.class_id;
-        link.classList.add("list-group-item");
-        link.textContent = classInfo.class_title;
-        list.appendChild(link);
-      });
-    })
-    .catch(function (error) {
-      console.error("Error fetching classes data:", error);
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
+
+    const { classCount, classes } = await response.json();
+
+    if (classCount == 0) {
+      console.log("User has 0 Classes");
+      return;
+    }
+
+    let list = document.getElementById("classes-list");
+
+    classes.forEach(function (classInfo) {
+      const link = document.createElement("a");
+      link.className = "list-group-item list-group-item-action";
+      link.href = "./pages/class.html?class=" + classInfo.class_id;
+      link.classList.add("list-group-item");
+      link.textContent = classInfo.class_title;
+      list.appendChild(link);
+    });
+  } catch (error) {
+    console.error(`Error inserting Classes ${error}`);
+  }
 }
 
 //used primarily in ./pages/class.html on page load
@@ -47,41 +57,54 @@ function displayClass(class_id) {
 }
 
 //used primarily in index.html on authenticated page load
-function displayUserAssignments(user) {
+async function displayUserAssignments(user) {
   var user = window.sessionStorage.getItem("user");
-  axios
-    .get("http://localhost:3000/assignments/get/" + user)
-    .then(function (response) {
-      var assignments = response.data;
-      var table = document.getElementById("assignments-table");
 
-      assignments.forEach(function (assignmentInfo) {
-        var row = document.createElement("tr");
+  const url = "http://localhost:3000/assignments/get/" + user;
 
-        var id = document.createElement("th");
-        id.textContent = assignmentInfo.assignment_id;
-        row.appendChild(id);
-
-        var title = document.createElement("td");
-        title.textContent = assignmentInfo.title;
-        row.appendChild(title);
-
-        var points_earned = document.createElement("td");
-        points_earned.textContent = assignmentInfo.points_earned;
-        row.appendChild(points_earned);
-
-        var grade = document.createElement("td");
-        grade.textContent = assignmentInfo.grade;
-        row.appendChild(grade);
-
-        var class_title = document.createElement("td");
-        class_title.textContent = assignmentInfo.class_title;
-        row.appendChild(class_title);
-
-        table.appendChild(row);
-      });
-    })
-    .catch(function (error) {
-      console.error("Error fetching assignments data:", error);
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
+
+    const { assignmentCount, assignments } = await response.json();
+
+    if (assignmentCount == 0) {
+      console.log("User Has 0 Assignments");
+      return;
+    }
+
+    var table = document.getElementById("assignments-table");
+
+    assignments.forEach(function (assignmentInfo) {
+      var row = document.createElement("tr");
+
+      var id = document.createElement("th");
+      id.textContent = assignmentInfo.assignment_id;
+      row.appendChild(id);
+
+      var title = document.createElement("td");
+      title.textContent = assignmentInfo.title;
+      row.appendChild(title);
+
+      var points_earned = document.createElement("td");
+      points_earned.textContent = assignmentInfo.points_earned;
+      row.appendChild(points_earned);
+
+      var grade = document.createElement("td");
+      grade.textContent = assignmentInfo.grade;
+      row.appendChild(grade);
+
+      var class_title = document.createElement("td");
+      class_title.textContent = assignmentInfo.class_title;
+      row.appendChild(class_title);
+
+      table.appendChild(row);
+    });
+  } catch (error) {
+    console.error(`Error inserting Assignments ${error}`);
+  }
 }
