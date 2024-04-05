@@ -36,8 +36,8 @@ function handleFormSubmit(event) {
         //     .digest("hex");
 
         if (user && user.password_hash === enteredPassword) {
-          // Set user in localStorage
-          window.localStorage.setItem("user", username);
+          // Set user in sessionStorage
+          window.sessionStorage.setItem("user", username);
           console.log("Successfully logged in");
           location.reload();
         } else {
@@ -57,6 +57,81 @@ function handleFormSubmit(event) {
 
 // logout user
 function handleLogout() {
-  window.localStorage.removeItem("user");
+  window.sessionStorage.removeItem("user");
   location.reload();
+}
+
+function displayUserClasses() {
+  var username = window.sessionStorage.getItem("user");
+  axios
+    .get("http://localhost:3000/classes/get/" + username)
+    .then(function (response) {
+      var classes = response.data;
+
+      var list = document.getElementById("classes-list");
+
+      classes.forEach(function (classInfo) {
+        var link = document.createElement("a");
+        link.className = "list-group-item list-group-item-action";
+        link.href = "/class.html?class=" + classInfo.class_id;
+        link.classList.add("list-group-item");
+        link.textContent = classInfo.class_title;
+        list.appendChild(link);
+      });
+    })
+    .catch(function (error) {
+      console.error("Error fetching classes data:", error);
+    });
+}
+
+function displayClass(class_id) {
+  axios
+    .get("http://localhost:3000/classes/class/" + class_id)
+    .then(function (response) {
+      thisClass = response.data;
+
+      document.getElementById("title").textContent = thisClass.class_title;
+    })
+    .catch(function (error) {
+      console.error("Error fetching class data:", error);
+    });
+}
+
+function displayUserAssignments() {
+  var username = window.sessionStorage.getItem("user");
+  axios
+    .get("http://localhost:3000/assignments/get/" + username)
+    .then(function (response) {
+      var assignments = response.data;
+      var table = document.getElementById("assignments-table");
+
+      assignments.forEach(function (assignmentInfo) {
+        var row = document.createElement("tr");
+
+        var id = document.createElement("th");
+        id.textContent = assignmentInfo.assignment_id;
+        row.appendChild(id);
+
+        var title = document.createElement("td");
+        title.textContent = assignmentInfo.title;
+        row.appendChild(title);
+
+        var points_earned = document.createElement("td");
+        points_earned.textContent = assignmentInfo.points_earned;
+        row.appendChild(points_earned);
+
+        var grade = document.createElement("td");
+        grade.textContent = assignmentInfo.grade;
+        row.appendChild(grade);
+
+        var class_title = document.createElement("td");
+        class_title.textContent = assignmentInfo.class_title;
+        row.appendChild(class_title);
+
+        table.appendChild(row);
+      });
+    })
+    .catch(function (error) {
+      console.error("Error fetching assignments data:", error);
+    });
 }
