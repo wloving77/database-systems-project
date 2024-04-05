@@ -13,70 +13,95 @@ const auth = {
   async handleLogin(event) {
     event.preventDefault();
 
-    var form = event.target;
+    const form = event.target;
+
+    const errorMsg = document.getElementById("error-message");
 
     // Check form validity
     if (!form.checkValidity()) {
+      errorMsg.innerHTML = "Please Fill Out All Fields";
+      errorMsg.style.display = "block";
       return;
-    } else {
-      var username = form.querySelector("#input-username").value;
-      var enteredPassword = form.querySelector("#input-password").value;
-      var errorMsg = document.getElementById("error-message");
-
-      // Perform AJAX request to get user data
-      axios
-        .get("http://localhost:3000/user/get/" + username)
-        .then(function (response) {
-          var user = response.data;
-
-          // can add hashing later once the test data has actual hashes
-          //   const hashedPassword = crypto
-          //     .createHash("sha256")
-          //     .update(enteredPassword)
-          //     .digest("hex");
-
-          if (user && user.password_hash === enteredPassword) {
-            // Set user in sessionStorage
-            window.sessionStorage.setItem("user", username);
-            console.log("Successfully logged in");
-            location.reload();
-          } else {
-            errorMsg.innerHTML = "Incorrect password";
-            errorMsg.style.display = "block";
-          }
-        })
-        .catch(function (error) {
-          console.error("Error fetching user data:", error);
-          errorMsg.innerHTML = "No user with that username";
-          errorMsg.style.display = "block";
-        });
     }
+
+    //prepare and send post request to backend, backend returns a valid username
+    const username = form.querySelector("#input-username-login").value;
+    const enteredPassword = form.querySelector("#input-password-login").value;
+
+    const authData = {
+      username: username,
+      password: enteredPassword,
+    };
+
+    const url = "http://localhost:3000/user/login";
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(authData),
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Error Processing Login Request, Server Responded With ${response.status}`
+      );
+    }
+
+    const responseData = await response.json();
+
+    //set session storage:
+    window.sessionStorage.setItem("user", responseData.username);
     errorMsg.style.display = "none";
-    form.classList.add("was-validated");
+    location.reload();
   },
 
   // logout user
   async handleLogout() {
     window.sessionStorage.removeItem("user");
-    location.reload();
+    //location.reload();
   },
 };
 
 /* Packaging UI updates into a couple functions */
 
 const uiAuth = {
+  async handleAuthEvent(event) {
+    const target_id = event.target.id;
+
+    //modify modal based on login vs signup vs logout
+    if (target_id == "profile_login") {
+      const loginForm = document.getElementById("login-form");
+      const signupForm = document.getElementById("signup-form");
+      const modalTitle = document.getElementById("modal-title");
+      modalTitle.innerHTML = "Login";
+      loginForm.style.display = "block";
+      signupForm.style.display = "none";
+    } else if (target_id == "profile_signup") {
+      const loginForm = document.getElementById("login-form");
+      const signupForm = document.getElementById("signup-form");
+      const modalTitle = document.getElementById("modal-title");
+      modalTitle.innerHTML = "Signup";
+      loginForm.style.display = "none";
+      signupForm.style.display = "block";
+    }
+
+    return;
+  },
+
   async updateUIForLoggedInUser(user) {
-    const profileBtn = document.getElementById("profile");
+    const profileLogin = document.getElementById("profile_login");
+    const profileLogout = document.getElementById("profile_logout");
+    const profileSignup = document.getElementById("profile_signup");
+
     displayUserClasses(user);
     displayUserAssignments(user);
 
-    // Directly set the button text and clear modal-related attributes
-    profileBtn.innerHTML = "Logout";
-    profileBtn.removeAttribute("data-bs-toggle");
-    profileBtn.removeAttribute("data-bs-target");
-
-    // Assign event listener for logout
-    profileBtn.addEventListener("click", auth.handleLogout);
+    //toggle visibility of login/logout/signup buttons
+    profileLogin.style.display = "none";
+    profileLogout.style.display = "block";
+    profileSignup.style.display = "none";
 
     // Set the logged-in username in session storage and the input field
     const loggedInUser = window.sessionStorage.getItem("user");
@@ -84,12 +109,13 @@ const uiAuth = {
   },
 
   async updateUIForLoggedOutUser() {
-    const profileBtn = document.getElementById("profile");
-    profileBtn.innerHTML = "Login";
-    profileBtn.setAttribute("data-bs-toggle", "modal");
-    profileBtn.setAttribute("data-bs-target", "#modal");
+    const profileLogin = document.getElementById("profile_login");
+    const profileLogout = document.getElementById("profile_logout");
+    const profileSignup = document.getElementById("profile_signup");
 
-    // Remove logout event listener
-    profileBtn.removeEventListener("click", auth.handleLogout);
+    //toggle button visibility
+    profileLogin.style.display = "block";
+    profileSignup.style.display = "block";
+    profileLogout.style.display = "none";
   },
 };

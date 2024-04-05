@@ -31,7 +31,32 @@
         <!-- navbar links -->
         <div class="collapse navbar-collapse">
           <div class="navbar-nav me-auto mb-2 mb-lg-0">
-            <a class="nav-link" href="" id="profile"></a>
+            <a
+              onclick="uiAuth.handleAuthEvent(event)"
+              data-bs-toggle="modal"
+              data-bs-target="#modal"
+              class="nav-link"
+              href=""
+              id="profile_login"
+              >Login</a
+            >
+            <a
+              onclick="uiAuth.handleAuthEvent(event)"
+              data-bs-toggle="modal"
+              data-bs-target="#modal"
+              class="nav-link"
+              href=""
+              id="profile_signup"
+              >Signup</a
+            >
+            <a
+              style="display: none"
+              onclick="auth.handleLogout()"
+              class="nav-link"
+              href=""
+              id="profile_logout"
+              >Logout</a
+            >
             <div class="input-group" style="width: 300px">
               <span class="input-group-text" id="basic-addon1">@</span>
               <input
@@ -52,7 +77,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Login</h5>
+            <h5 id="modal-title" class="modal-title">Login</h5>
             <button
               type="button"
               class="btn-close"
@@ -69,6 +94,7 @@
             <h6 class="card-subtitle mb-2 text-muted">
               Please enter your username and password
             </h6>
+            <!-- Login Form -->
             <form
               id="login-form"
               class="needs-validation"
@@ -76,24 +102,74 @@
               onsubmit="auth.handleLogin(event)"
             >
               <div class="mb-3">
-                <label for="input-username" class="form-label">Username</label>
+                <label for="input-username-login" class="form-label"
+                  >Username</label
+                >
                 <input
                   type="text"
                   class="form-control"
-                  id="input-username"
+                  id="input-username-login"
                   required
                 />
                 <div class="invalid-feedback">Please enter a username</div>
               </div>
               <div class="mb-3">
-                <label for="input-password" class="form-label">Password</label>
+                <label for="input-password-login" class="form-label"
+                  >Password</label
+                >
                 <input
                   type="password"
                   class="form-control"
-                  id="input-password"
+                  id="input-password-login"
                   required
                 />
                 <div class="invalid-feedback">Please enter a password</div>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <!-- Signup Form: -->
+            <form
+              style="display: none"
+              id="signup-form"
+              class="needs-validation"
+              novalidate
+              onsubmit="auth.handleSignup(event)"
+            >
+              <div class="mb-3">
+                <label for="input-username-signup" class="form-label"
+                  >Username</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="input-username-signup"
+                  required
+                />
+                <div class="invalid-feedback">Please Enter a Username</div>
+              </div>
+              <div class="mb-3">
+                <label for="input-password-signup" class="form-label"
+                  >Password</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="input-password-signup"
+                  required
+                />
+                <div class="invalid-feedback">Please Enter a Password</div>
+              </div>
+              <div class="mb-3">
+                <label for="input-password-check-signup" class="form-label"
+                  >Confirm Password</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="input-password-check-signup"
+                  required
+                />
+                <div class="invalid-feedback">Please Confirm this Password</div>
               </div>
               <button type="submit" class="btn btn-primary">Submit</button>
             </form>
