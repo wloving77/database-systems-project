@@ -13,10 +13,15 @@ async function getAllClasses(pool) {
 
 async function getClassesByUsername(pool, username) {
   try {
-    const [rows, fields] = await pool.query(
-      "SELECT  c.class_id, c.class_title FROM Users u JOIN User_Classes uc ON u.username = uc.username JOIN Classes c ON uc.class_id = c.class_id WHERE u.username = ?;",
-      [username]
-    );
+    const sqlQuery = `
+      SELECT c.class_id, c.class_title, ucg.grade
+      FROM Users u
+      JOIN User_Classes uc ON u.username = uc.username
+      JOIN Classes c ON uc.class_id = c.class_id
+      LEFT JOIN User_Class_Grades ucg ON uc.class_id = ucg.class_id AND ucg.username = u.username
+      WHERE u.username = ?;
+    `;
+    const [rows, fields] = await pool.query(sqlQuery, [username]);
     if (rows.length > 0) {
       return rows;
     } else {

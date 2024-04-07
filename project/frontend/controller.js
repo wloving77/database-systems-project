@@ -68,15 +68,28 @@ function displayUserClasses() {
     .then(function (response) {
       var classes = response.data;
 
-      var list = document.getElementById("classes-list");
+      var table = document.getElementById("classes-table");
 
       classes.forEach(function (classInfo) {
-        var link = document.createElement("a");
-        link.className = "list-group-item list-group-item-action";
-        link.href = "/class.html?class=" + classInfo.class_id;
-        link.classList.add("list-group-item");
-        link.textContent = classInfo.class_title;
-        list.appendChild(link);
+        var row = document.createElement("tr");
+        row.onclick = function () {
+          window.location.href = "/class.html?class=" + classInfo.class_id;
+        };
+        row.style.cursor = "pointer";
+
+        var id = document.createElement("th");
+        id.textContent = classInfo.class_id;
+        row.appendChild(id);
+
+        var title = document.createElement("td");
+        title.textContent = classInfo.class_title;
+        row.appendChild(title);
+
+        var grade = document.createElement("td");
+        grade.textContent = classInfo.grade;
+        row.appendChild(grade);
+
+        table.appendChild(row);
       });
     })
     .catch(function (error) {
