@@ -78,3 +78,6 @@ app.use("/classes", classesRoutes(pool));
 
 const assignmentsRoutes = require("./routes/assignmentsRoutes.js");
 app.use("/assignments", assignmentsRoutes(pool));
+
+const gradesRoutes = require("./routes/gradesRoutes.js");
+app.use("/grades", gradesRoutes(pool));
