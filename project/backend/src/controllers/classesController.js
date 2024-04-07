@@ -14,7 +14,13 @@ const getClassesByUsername = (pool) => async (req, res) => {
   try {
     const username = req.params.username;
     const classes = await classesModels.getClassesByUsername(pool, username);
-    res.json(classes);
+
+    if (classes == -1) {
+      res.json({ classCount: 0 });
+      return;
+    }
+
+    res.json({ classCount: classes.length, classes: classes });
   } catch (error) {
     console.error("Error getting classes for user:", error);
     res.status(500).json({ error: "Internal Server Error" });

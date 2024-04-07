@@ -15,7 +15,7 @@ async function getAllAssignments(pool) {
 }
 
 async function getAssignmentsByUsername(pool, username) {
-  const sqlFilePath = path.join(__dirname, "userAssignments.sql");
+  const sqlFilePath = path.join(__dirname, "sql_scripts/userAssignments.sql");
   const sqlQuery = fs.readFileSync(sqlFilePath, "utf8");
 
   try {
@@ -23,7 +23,8 @@ async function getAssignmentsByUsername(pool, username) {
     if (rows.length > 0) {
       return rows;
     } else {
-      throw new Error(`${userId} has no assignments`);
+      //using -1 as the return type when there is no data
+      return -1;
     }
   } catch (error) {
     throw error;
