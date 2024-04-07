@@ -37,7 +37,7 @@ const handleUserLogin = (pool) => {
       if (sentPasswordHashed === hashedPassword) {
         res.json({ username: user.username });
       } else {
-        res.status(401);
+        res.status(401).json({ error: "Invalid username or password" });
       }
     } catch (error) {
       res.status(500);

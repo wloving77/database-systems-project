@@ -43,13 +43,15 @@ const auth = {
       body: JSON.stringify(authData),
     });
 
+    const responseData = await response.json();
+
     if (!response.ok) {
+      errorMsg.innerHTML = responseData.error;
+      errorMsg.style.display = "block";
       throw new Error(
         `Error Processing Login Request, Server Responded With ${response.status}`
       );
     }
-
-    const responseData = await response.json();
 
     //set session storage:
     window.sessionStorage.setItem("user", responseData.username);
