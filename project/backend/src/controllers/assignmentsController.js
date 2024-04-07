@@ -17,7 +17,13 @@ const getAssignmentsByUsername = (pool) => async (req, res) => {
       pool,
       username
     );
-    res.json(assignments);
+
+    if (assignments == -1) {
+      res.json({ assignmentCount: 0 });
+      return;
+    }
+
+    res.json({ assignmentCount: assignments.length, assignments: assignments });
   } catch (error) {
     console.error("Error getting assignments for user:", error);
     res.status(500).json({ error: "Internal Server Error" });

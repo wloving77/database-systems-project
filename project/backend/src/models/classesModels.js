@@ -25,7 +25,8 @@ async function getClassesByUsername(pool, username) {
     if (rows.length > 0) {
       return rows;
     } else {
-      throw new Error(`${userId} has no classes`);
+      //using -1 as the return type when there is no data
+      return -1;
     }
   } catch (error) {
     throw error;
@@ -41,7 +42,8 @@ async function getClassById(pool, class_id) {
     if (rows.length > 0) {
       return rows[0];
     } else {
-      throw new Error(`No class found`);
+      //using -1 as the return type when there is no data
+      return -1;
     }
   } catch (error) {
     throw error;

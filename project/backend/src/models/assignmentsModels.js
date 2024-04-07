@@ -29,7 +29,8 @@ async function getAssignmentsByUsername(pool, username) {
     if (rows.length > 0) {
       return rows;
     } else {
-      throw new Error(`${userId} has no assignments`);
+      //using -1 as the return type when there is no data
+      return -1;
     }
   } catch (error) {
     throw error;
