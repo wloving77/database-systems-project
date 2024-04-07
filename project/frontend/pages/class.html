@@ -12,7 +12,48 @@
     <script src="../js/ui.js"></script>
   </head>
   <body>
-    <h1 class="display-3" id="title"></h1>
+    <div class="container-fluid">
+      <h1 class="display-3" id="title"></h1>
+
+      <div class="col">
+        <div class="row py-3">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Assignment Grades</h5>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Points Earned</th>
+                    <th scope="col">Grade</th>
+                  </tr>
+                </thead>
+                <tbody id="assignments-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="row py-3">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Category Grades</h5>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">Category</th>
+                    <th scope="col">Points Earned</th>
+                    <th scope="col">Grade</th>
+                  </tr>
+                </thead>
+                <tbody id="categories-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {

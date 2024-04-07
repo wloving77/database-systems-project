@@ -56,17 +56,103 @@ async function displayUserClasses(user) {
 }
 
 //used primarily in ./pages/class.html on page load
-function displayClass(class_id) {
-  axios
-    .get("http://localhost:3000/classes/class/" + class_id)
-    .then(function (response) {
-      thisClass = response.data;
-
-      document.getElementById("title").textContent = thisClass.class_title;
-    })
-    .catch(function (error) {
-      console.error("Error fetching class data:", error);
+async function displayClass(class_id) {
+  var url = "http://localhost:3000/classes/class/" + class_id;
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
+    const { class_title } = await response.json();
+    document.getElementById("title").textContent = class_title;
+  } catch (error) {
+    console.error(`Error getting Class ${error}`);
+  }
+
+  const username = window.sessionStorage.getItem("user");
+
+  url =
+    "http://localhost:3000/grades/get/assignment-grades/" +
+    username +
+    "/" +
+    class_id;
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const assignments = await response.json();
+
+    var table = document.getElementById("assignments-table");
+
+    assignments.forEach(function (assignmentInfo) {
+      var row = document.createElement("tr");
+
+      var id = document.createElement("th");
+      id.textContent = assignmentInfo.assignment_id;
+      row.appendChild(id);
+
+      var title = document.createElement("td");
+      title.textContent = assignmentInfo.title;
+      row.appendChild(title);
+
+      var points_earned = document.createElement("td");
+      points_earned.textContent = assignmentInfo.points_earned;
+      row.appendChild(points_earned);
+
+      var grade = document.createElement("td");
+      grade.textContent = assignmentInfo.grade;
+      row.appendChild(grade);
+
+      table.appendChild(row);
+    });
+  } catch (error) {
+    console.error(`Error inserting Assignments ${error}`);
+  }
+
+  url =
+    "http://localhost:3000/grades/get/category-grades/" +
+    username +
+    "/" +
+    class_id;
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const categories = await response.json();
+    console.log(categories);
+
+    var table = document.getElementById("categories-table");
+
+    categories.forEach(function (categoryInfo) {
+      var row = document.createElement("tr");
+
+      var category = document.createElement("td");
+      category.textContent = categoryInfo.category;
+      row.appendChild(category);
+
+      var points_earned = document.createElement("td");
+      points_earned.textContent = categoryInfo.points_earned;
+      row.appendChild(points_earned);
+
+      var grade = document.createElement("td");
+      grade.textContent = categoryInfo.grade;
+      row.appendChild(grade);
+
+      table.appendChild(row);
+    });
+  } catch (error) {
+    console.error(`Error inserting Categories ${error}`);
+  }
 }
 
 //used primarily in index.html on authenticated page load
