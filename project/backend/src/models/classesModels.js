@@ -50,8 +50,22 @@ async function getClassById(pool, class_id) {
   }
 }
 
+async function insertClass(pool, class_title ) {
+  try {
+    const [rows, fields] = await pool.query(
+      "INSERT INTO Classes (class_title) VALUES (?)",
+      [class_title]
+    );
+    return rows;
+  }
+  catch (error) {
+    throw error;
+  }
+  
+}
 module.exports = {
   getAllClasses,
   getClassesByUsername,
   getClassById,
+  insertClass,
 };
