@@ -1,14 +1,3 @@
-//helper function for performing a simple get request on the provided url and returning json data.
-async function fetchData(url) {
-  try {
-    const response = await axios.get(url);
-    return response.data;
-  } catch (error) {
-    console.error(`Error fetching data from ${url}:`, error);
-    throw error; // Rethrow to handle specifics outside
-  }
-}
-
 const auth = {
   async handleLogin(event) {
     event.preventDefault();
@@ -128,34 +117,29 @@ const auth = {
 /* Packaging UI updates into a couple functions */
 
 const uiAuth = {
-  async handleAuthEvent(event) {
+  handleAuthEvent(event) {
     const target_id = event.target.id;
 
-    //modify modal based on login vs signup vs logout
+    // modify modal based on login vs signup vs logout
+    const loginForm = document.getElementById("login-form");
+    const signupForm = document.getElementById("signup-form");
+    const modalTitle = document.getElementById("modal-title");
+    const modalHeader = document.getElementById("modal-header");
+
     if (target_id == "profile_login") {
-      const loginForm = document.getElementById("login-form");
-      const signupForm = document.getElementById("signup-form");
-      const modalTitle = document.getElementById("modal-title");
-      const modalHeader = document.getElementById("modal-header");
       loginForm.style.display = "block";
       signupForm.style.display = "none";
       modalTitle.innerHTML = "Login";
       modalHeader.innerHTML = "Please Enter your Username and Password";
     } else if (target_id == "profile_signup") {
-      const loginForm = document.getElementById("login-form");
-      const signupForm = document.getElementById("signup-form");
-      const modalTitle = document.getElementById("modal-title");
-      const modalHeader = document.getElementById("modal-header");
       loginForm.style.display = "none";
       signupForm.style.display = "block";
       modalTitle.innerHTML = "Signup";
       modalHeader.innerHTML = "Please Choose a Username and Password";
     }
-
-    return;
   },
 
-  async updateUIForLoggedInUser(user) {
+  updateUIForLoggedInUser(user) {
     const profileLogin = document.getElementById("profile_login");
     const profileLogout = document.getElementById("profile_logout");
     const profileSignup = document.getElementById("profile_signup");
@@ -163,22 +147,22 @@ const uiAuth = {
     displayUserClasses(user);
     displayUserAssignments(user);
 
-    //toggle visibility of login/logout/signup buttons
+    // toggle visibility of login/logout/signup buttons
     profileLogin.style.display = "none";
     profileLogout.style.display = "block";
     profileSignup.style.display = "none";
 
-    // Set the logged-in username in session storage and the input field
+    // set the logged-in username in session storage and the input field
     const loggedInUser = window.sessionStorage.getItem("user");
     document.getElementById("username").value = loggedInUser;
   },
 
-  async updateUIForLoggedOutUser() {
+  updateUIForLoggedOutUser() {
     const profileLogin = document.getElementById("profile_login");
     const profileLogout = document.getElementById("profile_logout");
     const profileSignup = document.getElementById("profile_signup");
 
-    //toggle button visibility
+    // toggle button visibility
     profileLogin.style.display = "block";
     profileSignup.style.display = "block";
     profileLogout.style.display = "none";
