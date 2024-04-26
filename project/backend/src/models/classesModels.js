@@ -50,8 +50,26 @@ async function getClassById(pool, class_id) {
   }
 }
 
+async function getClassAverageGrades(pool, class_id) {
+  try {
+    const [rows, fields] = await pool.query(
+      "SELECT grade FROM Class_Average_Grades WHERE class_id = ?;",
+      [class_id]
+    );
+    if (rows.length > 0) {
+      return rows[0];
+    } else {
+      //using -1 as the return type when there is no data
+      return -1;
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   getAllClasses,
   getClassesByUsername,
   getClassById,
+  getClassAverageGrades,
 };

@@ -29,7 +29,22 @@ async function getCategoryGradesByClass(pool, username, classId) {
   }
 }
 
+async function getCategoryAveragesByClass(pool, classId, category) {
+  try {
+    const sqlQuery = `
+        SELECT grade
+        FROM Category_Average_Grades
+        WHERE class_id = ? AND category = ?;
+    `;
+    const [rows, fields] = await pool.query(sqlQuery, [classId, category]);
+    return rows[0];
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   getAssignmentGradesByClass,
   getCategoryGradesByClass,
+  getCategoryAveragesByClass,
 };

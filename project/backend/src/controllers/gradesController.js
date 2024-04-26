@@ -32,7 +32,24 @@ const getCategoryGradesByClass = (pool) => async (req, res) => {
   }
 };
 
+const getCategoryAveragesByClass = (pool) => async (req, res) => {
+  try {
+    const classId = req.params.class_id;
+    const category = req.params.category;
+    const avg = await gradesModels.getCategoryAveragesByClass(
+      pool,
+      classId,
+      category
+    );
+    res.json(avg);
+  } catch (error) {
+    console.error("Error getting category average grades:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   getAssignmentGradesByClass,
   getCategoryGradesByClass,
+  getCategoryAveragesByClass,
 };
