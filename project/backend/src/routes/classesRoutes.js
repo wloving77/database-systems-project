@@ -9,5 +9,7 @@ module.exports = function (pool) {
 
   router.get("/class/:id", classesController.getClassById(pool));
 
+  router.get("/class/:id/avg", classesController.getClassAverageGrades(pool));
+
   return router;
 };

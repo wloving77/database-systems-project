@@ -15,5 +15,10 @@ module.exports = function (pool) {
     gradesController.getCategoryGradesByClass(pool)
   );
 
+  router.get(
+    "/get/category-grades/:class_id/:category/avg",
+    gradesController.getCategoryAveragesByClass(pool)
+  );
+
   return router;
 };

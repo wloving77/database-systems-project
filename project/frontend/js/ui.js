@@ -115,11 +115,26 @@ async function displayClass(class_id) {
     console.error(`Error inserting Assignments ${error}`);
   }
 
-  url =
-    "http://localhost:3000/grades/get/category-grades/" +
-    username +
-    "/" +
-    class_id;
+  try {
+    url =
+      "http://localhost:3000/grades/get/category-grades/" +
+      username +
+      "/" +
+      class_id;
+
+    const categoriesRes = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const categories = await categoriesRes.json();
+    renderCategories(categories);
+  } catch (error) {
+    console.error(`Error inserting Categories ${error}`);
+  }
+
+  url = "http://localhost:3000/classes/class/" + class_id + "/avg";
   try {
     const response = await fetch(url, {
       method: "GET",
@@ -128,30 +143,54 @@ async function displayClass(class_id) {
       },
     });
 
-    const categories = await response.json();
-    console.log(categories);
-
-    var table = document.getElementById("categories-table");
-
-    categories.forEach(function (categoryInfo) {
-      var row = document.createElement("tr");
-
-      var category = document.createElement("td");
-      category.textContent = categoryInfo.category;
-      row.appendChild(category);
-
-      var points_earned = document.createElement("td");
-      points_earned.textContent = categoryInfo.points_earned;
-      row.appendChild(points_earned);
-
-      var grade = document.createElement("td");
-      grade.textContent = categoryInfo.grade;
-      row.appendChild(grade);
-
-      table.appendChild(row);
-    });
+    const { grade } = await response.json();
+    document.getElementById("grade").textContent = grade;
   } catch (error) {
-    console.error(`Error inserting Categories ${error}`);
+    console.error(`Error inserting Class Average ${error}`);
+  }
+}
+
+async function renderCategories(categories) {
+  var table = document.getElementById("categories-table");
+
+  for (const categoryInfo of categories) {
+    var row = document.createElement("tr");
+
+    var category = document.createElement("td");
+    category.textContent = categoryInfo.category;
+    row.appendChild(category);
+
+    var points_earned = document.createElement("td");
+    points_earned.textContent = categoryInfo.points_earned;
+    row.appendChild(points_earned);
+
+    var grade = document.createElement("td");
+    grade.textContent = categoryInfo.grade;
+    row.appendChild(grade);
+
+    try {
+      url =
+        "http://localhost:3000/grades/get/category-grades/" +
+        categoryInfo.class_id +
+        "/" +
+        categoryInfo.category +
+        "/avg";
+
+      const avgRes = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const { grade } = await avgRes.json();
+      var avg = document.createElement("td");
+      avg.textContent = grade;
+      row.appendChild(avg);
+    } catch (error) {
+      console.error(`Error getting Category Average ${error}`);
+    }
+
+    table.appendChild(row);
   }
 }
 
