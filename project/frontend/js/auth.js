@@ -48,9 +48,10 @@ const auth = {
     if (!response.ok) {
       errorMsg.innerHTML = responseData.error;
       errorMsg.style.display = "block";
-      throw new Error(
+      console.log(
         `Error Processing Login Request, Server Responded With ${response.status}`
       );
+      return;
     }
 
     //set session storage:
@@ -103,6 +104,13 @@ const auth = {
       },
       body: JSON.stringify(authData),
     });
+
+    if (response.status == 409) {
+      errorMsg.innerHTML =
+        "User Already Exists, Please Choose a Different Username";
+      errorMsg.style.display = "block";
+      return;
+    }
 
     if (!response.ok) {
       throw new Error(
