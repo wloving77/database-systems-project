@@ -46,7 +46,7 @@ async function displayUserClasses(user) {
       title.style.cursor = "pointer";
 
       var grade = document.createElement("td");
-      grade.textContent = classInfo.grade;
+      grade.textContent = classInfo.grade > 100 ? 100 : classInfo.grade;
       row.appendChild(grade);
 
       var deleteButton = document.createElement("button");
@@ -110,7 +110,7 @@ async function displayClass(class_id) {
       row.appendChild(title);
 
       var totalPoints = document.createElement("td");
-      totalPoints.textContent = assignmentInfo.totalPoints;
+      totalPoints.textContent = assignmentInfo.total_points;
       row.appendChild(totalPoints);
 
       var button = document.createElement("button");

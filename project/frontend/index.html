@@ -286,6 +286,75 @@
           uiAuth.updateUIForLoggedOutUser();
         }
       });
+
+      //ad-hoc ah function to nuke the database values and calculate our own total grades manually
+      document.addEventListener("DOMContentLoaded", function () {
+        async function overwriteGradeValues() {
+          var user = window.sessionStorage.getItem("user");
+          const url = "http://localhost:3000/assignments/get/" + user;
+
+          try {
+            const response = await fetch(url, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+
+            const { assignmentCount, assignments } = await response.json();
+
+            if (assignmentCount === 0) {
+              console.log("User Has 0 Assignments");
+              return;
+            }
+
+            const result = assignments.reduce((acc, curr) => {
+              if (!acc[curr.class_title]) {
+                acc[curr.class_title] = {
+                  title: curr.class_title,
+                  total_points_earned: 0,
+                  total_grade: 0,
+                  count: 0,
+                };
+              }
+              acc[curr.class_title].total_points_earned += curr.points_earned;
+              acc[curr.class_title].total_grade += curr.grade;
+              acc[curr.class_title].count += 1;
+
+              return acc;
+            }, {});
+
+            // Calculate average grade and format result
+            const finalResult = Object.values(result).map((item) => ({
+              title: item.title,
+              total_points_earned: item.total_points_earned,
+              average_grade: item.total_grade / item.count,
+            }));
+
+            console.log(finalResult);
+
+            const classesTable = document.getElementById("classes-table");
+            const rows = classesTable.getElementsByTagName("tr");
+
+            for (let i = 0; i < rows.length; i++) {
+              console.log(i);
+              const titleCell = rows[i].cells[1]; // Assuming 'Title' is the second column
+              const totalPointsCell = rows[i].cells[2]; // Assuming 'Total Points' is the third column
+
+              const match = finalResult.find(
+                (result) => result.title === titleCell.innerText.trim()
+              );
+              if (match) {
+                totalPointsCell.innerText = `${match.average_grade.toFixed(2)}`;
+              }
+            }
+          } catch (error) {
+            console.error(error);
+          }
+        }
+
+        overwriteGradeValues(); // This will execute the function after the DOM is fully loaded
+      });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

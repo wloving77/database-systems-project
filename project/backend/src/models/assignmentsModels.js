@@ -72,7 +72,7 @@ async function addAssignmentGrade(
   username,
   assignment_id,
   points_earned,
-  total_points
+  grade
 ) {
   const query =
     "INSERT INTO User_Assignment_Grades (assignment_id, username, points_earned, grade) VALUES (?,?,?,?)";
@@ -82,7 +82,7 @@ async function addAssignmentGrade(
       assignment_id,
       username,
       points_earned,
-      total_points,
+      grade,
     ]);
 
     return 1;
