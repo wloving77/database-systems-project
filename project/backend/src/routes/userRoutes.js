@@ -11,5 +11,7 @@ module.exports = function (pool) {
 
   router.post("/signup", userController.handleUserSignup(pool));
 
+  router.post("/updateUser", userController.updateUser(pool));
+
   return router;
 };

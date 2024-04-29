@@ -30,7 +30,61 @@ const getAssignmentsByUsername = (pool) => async (req, res) => {
   }
 };
 
+const addAssignment = (pool) => async (req, res) => {
+  try {
+    const {
+      username,
+      class_id,
+      assignment_title,
+      assignment_category,
+      total_points,
+    } = req.body;
+
+    const success = assignmentsModels.addAssignmentByClassAndUser(
+      pool,
+      class_id,
+      assignment_title,
+      assignment_category,
+      total_points
+    );
+
+    if (success) {
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(500);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const addGrade = (pool) => async (req, res) => {
+  try {
+    const { username, assignment_id, points_earned, grade } = req.body;
+
+    console.log(req.body);
+
+    const success = await assignmentsModels.addAssignmentGrade(
+      pool,
+      username,
+      assignment_id,
+      points_earned,
+      grade
+    );
+
+    if (success == 1) {
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(500);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 module.exports = {
   getAllAssignments,
   getAssignmentsByUsername,
+  addAssignment,
+  addGrade,
 };

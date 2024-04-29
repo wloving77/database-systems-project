@@ -16,7 +16,7 @@ async function getUserByUsername(pool, username) {
     if (rows.length > 0) {
       return rows[0];
     } else {
-      throw new Error(`User with ID ${userId} not found`);
+      return -1;
     }
   } catch (error) {
     console.error("Insert operation failed", error.message);
@@ -50,8 +50,38 @@ async function insertNewUser(
   }
 }
 
+async function updateUsernameForUser(pool, originalUsername, newUsername) {
+  // Ensure that new usernames are not empty and handle SQL injection
+  if (!newUsername || newUsername.trim() === "") {
+    throw new Error("New username cannot be empty.");
+  }
+
+  const query = `
+    UPDATE Users
+    SET username = ?
+    WHERE username = ?;
+  `;
+
+  try {
+    const [result] = await pool.execute(query, [
+      newUsername.trim(),
+      originalUsername,
+    ]);
+    if (result.affectedRows === 0) {
+      throw new Error(
+        "No user found with the specified username. No update was made."
+      );
+    }
+    return 1;
+  } catch (error) {
+    console.error("Failed to update username:", error);
+    throw error;
+  }
+}
+
 module.exports = {
   getUsers,
   getUserByUsername,
   insertNewUser,
+  updateUsernameForUser,
 };

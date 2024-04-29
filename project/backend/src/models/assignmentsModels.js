@@ -37,7 +37,69 @@ async function getAssignmentsByUsername(pool, username) {
   }
 }
 
+async function addAssignmentByClassAndUser(
+  pool,
+  class_id,
+  assignment_name,
+  assignment_category,
+  total_points
+) {
+  const query =
+    "INSERT INTO Assignments (title, class_id, category, total_points) VALUES (?,?,?,?)";
+
+  try {
+    const [result] = await pool.execute(query, [
+      assignment_name,
+      class_id,
+      assignment_category,
+      total_points,
+    ]);
+
+    return 1;
+  } catch (error) {
+    if (error.code === "ER_DUP_ENTRY") {
+      console.log("Assignment already exists. Returning 1 as specified.");
+      return 1;
+    } else {
+      console.error("Error executing the query: ", error);
+      throw error;
+    }
+  }
+}
+
+async function addAssignmentGrade(
+  pool,
+  username,
+  assignment_id,
+  points_earned,
+  grade
+) {
+  const query =
+    "INSERT INTO User_Assignment_Grades (assignment_id, username, points_earned, grade) VALUES (?,?,?,?)";
+
+  try {
+    const [result] = await pool.execute(query, [
+      assignment_id,
+      username,
+      points_earned,
+      grade,
+    ]);
+
+    return 1;
+  } catch (error) {
+    if (error.code === "ER_DUP_ENTRY") {
+      console.log("Assignment already exists. Returning 1 as specified.");
+      return 1;
+    } else {
+      console.error("Error executing the query: ", error);
+      throw error;
+    }
+  }
+}
+
 module.exports = {
   getAllAssignments,
   getAssignmentsByUsername,
+  addAssignmentByClassAndUser,
+  addAssignmentGrade,
 };

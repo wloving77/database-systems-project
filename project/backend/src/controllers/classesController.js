@@ -49,9 +49,53 @@ const getClassAverageGrades = (pool) => async (req, res) => {
   }
 };
 
+const addClass = (pool) => async (req, res) => {
+  try {
+    const { className, username } = req.body;
+
+    const success = await classesModels.addClassByUsername(
+      pool,
+      className,
+      username
+    );
+
+    if (success == 1) {
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(500);
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deleteClass = (pool) => async (req, res) => {
+  try {
+    const { className, username } = req.body;
+
+    const success = await classesModels.deleteClassByUsername(
+      pool,
+      className,
+      username
+    );
+
+    if (success == 1) {
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(500);
+    }
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   getAllClasses,
   getClassesByUsername,
   getClassById,
   getClassAverageGrades,
+  addClass,
+  deleteClass,
 };
