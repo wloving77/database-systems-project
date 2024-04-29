@@ -10,7 +10,7 @@ function loadComponent(componentUrl, containerId) {
 
 //used primarily in index.html on authenticated page load
 async function displayUserClasses(user) {
-  const url = "http://localhost:3000/classes/get/" + user;
+  const url = "http://localhost:3000/classes/get/" + user.value;
 
   try {
     const response = await fetch(url, {
@@ -307,9 +307,7 @@ async function renderCategories(categories) {
 
 //used primarily in index.html on authenticated page load
 async function displayUserAssignments(user) {
-  var user = window.sessionStorage.getItem("user");
-
-  const url = "http://localhost:3000/assignments/get/" + user;
+  const url = "http://localhost:3000/assignments/get/" + user.value;
 
   try {
     const response = await fetch(url, {
@@ -470,5 +468,3 @@ async function handleGradeAdd(event) {
     console.error(error);
   }
 }
-
-async function displayAssignmentsByClass(user, class_id) {}

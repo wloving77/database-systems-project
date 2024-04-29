@@ -76,9 +76,28 @@ const handleUserSignup = (pool) => {
   };
 };
 
+const updateUser = (pool) => {
+  return async (req, res) => {
+    const { originalUsername, newUsernamne } = req.body;
+
+    const success = await userModel.updateUser(
+      pool,
+      originalUsername,
+      newUsernamne
+    );
+
+    if (success == 1) {
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(500);
+    }
+  };
+};
+
 module.exports = {
   getUsers,
   getUserByUsername,
   handleUserLogin,
   handleUserSignup,
+  updateUser,
 };
