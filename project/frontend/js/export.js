@@ -1,36 +1,30 @@
 async function exportUserInfo() {
-    const url = "http://localhost:3000/classes/get/" + user;
+  const user = window.sessionStorage.getItem("user");
 
-    try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const { classCount, classes } = await response.json();
+  const url = "http://localhost:3000/classes/get/" + user;
 
-      var jsonData = JSON.stringify(classes, null, 2);
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const { classCount, classes } = await response.json();
 
-        var blob = new Blob([jsonData], { type: 'application/json' });
+    var jsonData = JSON.stringify(classes, null, 2);
 
-        // Create a temporary anchor element
-        var downloadAnchorNode = document.createElement('a');
-        
-        downloadAnchorNode.href = window.URL.createObjectURL(blob);
-        downloadAnchorNode.download = 'user_info.json'; // Default filename
-        document.body.appendChild(downloadAnchorNode);
-        downloadAnchorNode.click();
-        document.body.removeChild(downloadAnchorNode);
+    var blob = new Blob([jsonData], { type: "application/json" });
 
+    // Create a temporary anchor element
+    var downloadAnchorNode = document.createElement("a");
 
-   
-
-    }
-    
-    
-    catch (error) {
-        console.error(`Error exporting Classes ${error}`);
-    }
-
+    downloadAnchorNode.href = window.URL.createObjectURL(blob);
+    downloadAnchorNode.download = "user_info.json"; // Default filename
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    document.body.removeChild(downloadAnchorNode);
+  } catch (error) {
+    console.error(`Error exporting Classes ${error}`);
+  }
 }
