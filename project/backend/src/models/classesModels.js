@@ -4,7 +4,7 @@ async function getAllClasses(pool) {
     if (rows.length > 0) {
       return rows;
     } else {
-      throw new Error(`No classes found`);
+      return -1;
     }
   } catch (error) {
     throw error;
@@ -67,9 +67,102 @@ async function getClassAverageGrades(pool, class_id) {
   }
 }
 
+async function addClassByUsername(pool, classTitle, username) {
+  let connection;
+
+  console.log(classTitle, username);
+
+  try {
+    // Get a connection from the pool
+    connection = await pool.getConnection();
+
+    // Start a transaction
+    await connection.beginTransaction();
+
+    // Insert into Classes table
+    const [classInsertResult] = await connection.execute(
+      "INSERT INTO Classes (class_title) VALUES (?)",
+      [classTitle]
+    );
+    const classId = classInsertResult.insertId;
+    console.log("Inserted class with ID:", classId);
+
+    // Insert into User_Classes table
+    const [userClassInsertResult] = await connection.execute(
+      "INSERT INTO User_Classes (username, class_id) VALUES (?, ?)",
+      [username, classId]
+    );
+    console.log("User enrolled in class successfully");
+
+    // Commit transaction
+    await connection.commit();
+
+    return 1;
+  } catch (error) {
+    if (connection) await connection.rollback();
+    console.error("Error in addClassByUsername:", error);
+    return -1; // Indicating failure
+  } finally {
+    if (connection) await connection.release();
+  }
+}
+
+async function deleteClassByUsername(pool, classTitle, username) {
+  let connection;
+
+  console.log(classTitle, username);
+
+  try {
+    // Get a connection from the pool
+    connection = await pool.getConnection();
+
+    // Start a transaction
+    await connection.beginTransaction();
+
+    // First, find the class ID based on class title
+    const [classResult] = await connection.execute(
+      "SELECT class_id FROM Classes WHERE class_title = ?",
+      [classTitle]
+    );
+    if (classResult.length === 0) {
+      throw new Error("Class not found");
+    }
+    const classId = classResult[0].class_id;
+
+    // Delete from User_Classes table
+    await connection.execute(
+      "DELETE FROM User_Classes WHERE username = ? AND class_id = ?",
+      [username, classId]
+    );
+    console.log("User unenrolled from class successfully");
+
+    // Optionally, remove the class entirely if no more users are enrolled
+    await connection.execute(
+      "DELETE FROM Classes WHERE class_id = ? AND NOT EXISTS (SELECT * FROM User_Classes WHERE class_id = ?)",
+      [classId, classId]
+    );
+    console.log("Class deleted successfully if no more users are enrolled");
+
+    // Commit transaction
+    await connection.commit();
+
+    return 1; // Indicating success
+  } catch (error) {
+    // Roll back the transaction in case of an error
+    if (connection) await connection.rollback();
+    console.error("Error in deleteClassByUsername:", error);
+    return -1; // Indicating failure
+  } finally {
+    // Release the connection back to the pool
+    if (connection) await connection.release();
+  }
+}
+
 module.exports = {
   getAllClasses,
   getClassesByUsername,
   getClassById,
   getClassAverageGrades,
+  addClassByUsername,
+  deleteClassByUsername,
 };

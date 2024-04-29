@@ -31,10 +31,6 @@ async function displayUserClasses(user) {
 
     classes.forEach(function (classInfo) {
       var row = document.createElement("tr");
-      row.onclick = function () {
-        window.location.href = "/pages/class.html?class=" + classInfo.class_id;
-      };
-      row.style.cursor = "pointer";
 
       var id = document.createElement("th");
       id.textContent = classInfo.class_id;
@@ -44,9 +40,21 @@ async function displayUserClasses(user) {
       title.textContent = classInfo.class_title;
       row.appendChild(title);
 
+      title.onclick = function () {
+        window.location.href = "/pages/class.html?class=" + classInfo.class_id;
+      };
+      title.style.cursor = "pointer";
+
       var grade = document.createElement("td");
       grade.textContent = classInfo.grade;
       row.appendChild(grade);
+
+      var deleteButton = document.createElement("button");
+      deleteButton.innerHTML = "Remove Class?";
+      deleteButton.onclick = function () {
+        handleClassDelete(classInfo.class_title);
+      };
+      row.appendChild(deleteButton);
 
       table.appendChild(row);
     });
@@ -147,6 +155,103 @@ async function displayClass(class_id) {
     document.getElementById("grade").textContent = grade;
   } catch (error) {
     console.error(`Error inserting Class Average ${error}`);
+  }
+}
+
+async function prepareClassAdd(event) {
+  event.preventDefault();
+  const target_id = event.target.id;
+
+  if (target_id == "addClassButton") {
+    const loginForm = document.getElementById("login-form");
+    const signupForm = document.getElementById("signup-form");
+    const classAddForm = document.getElementById("class-add-form");
+    const modalTitle = document.getElementById("modal-title");
+    const modalHeader = document.getElementById("modal-header");
+    loginForm.style.display = "none";
+    signupForm.style.display = "none";
+    classAddForm.style.display = "block";
+    modalTitle.innerHTML = "Enter Class Name";
+    modalHeader.innerHTML = "Any Class Name is Valid";
+  }
+}
+
+async function handleClassAdd(event) {
+  event.preventDefault();
+
+  const form = event.target;
+  const errorMsg = document.getElementById("error-message");
+  const className = document.getElementById("input-class-name").value;
+  const loggedInUser = window.sessionStorage.getItem("user");
+
+  if (!form.checkValidity()) {
+    errorMsg.innerHTML = "Please Fill Out All Fields";
+    errorMsg.style.display = "block";
+    return;
+  }
+
+  if (!loggedInUser) {
+    errorMsg.innerHTML = "Please Login to Add Classes";
+    errorMsg.style.display = "block";
+    return;
+  }
+
+  const postData = {
+    className: className,
+    username: loggedInUser,
+  };
+
+  const url = "http://localhost:3000/classes/addClass";
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(postData),
+  });
+
+  if (response.ok) {
+    console.log(
+      `Successfully Added Class ${className} for User ${loggedInUser}`
+    );
+    location.reload();
+  } else {
+    console.log(`Error Adding Class ${className} for User ${loggedInUser}`);
+  }
+
+  return;
+}
+
+async function handleClassDelete(classTitle) {
+  const user = window.sessionStorage.getItem("user");
+
+  if (!user) {
+    location.reload();
+  }
+
+  try {
+    const url = "http://localhost:3000/classes/deleteClass";
+
+    const postData = {
+      className: classTitle,
+      username: user,
+    };
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(postData),
+    });
+
+    if (response.ok) {
+      console.log(`Successfully Deleted ${classTitle} for user ${user}`);
+      location.reload();
+    } else {
+      console.log(`Error Deleting Course, Please Try Again`);
+    }
+  } catch (error) {
+    throw error;
   }
 }
 

@@ -11,5 +11,9 @@ module.exports = function (pool) {
 
   router.get("/class/:id/avg", classesController.getClassAverageGrades(pool));
 
+  router.post("/addClass", classesController.addClass(pool));
+
+  router.post("/deleteClass", classesController.deleteClass(pool));
+
   return router;
 };

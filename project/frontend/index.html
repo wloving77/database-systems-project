@@ -198,6 +198,27 @@
               </div>
               <button type="submit" class="btn btn-primary">Submit</button>
             </form>
+
+            <!-- Class Add Form -->
+            <form
+              id="class-add-form"
+              class="needs-validation"
+              novalidate
+              onsubmit="handleClassAdd(event)"
+            >
+              <div class="mb-3">
+                <label for="input-class-name" class="form-label"
+                  >Class Name</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="input-class-name"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
           </div>
         </div>
       </div>
@@ -222,6 +243,14 @@
                 </thead>
                 <tbody id="classes-table"></tbody>
               </table>
+              <button
+                id="addClassButton"
+                onclick="prepareClassAdd(event)"
+                data-bs-toggle="modal"
+                data-bs-target="#modal"
+              >
+                Add Class
+              </button>
             </div>
           </div>
         </div>
