@@ -12,6 +12,10 @@ async function exportUserInfo() {
     });
     const { classCount, classes } = await response.json();
 
+    if (classes.length <= 0) {
+      return;
+    }
+
     var jsonData = JSON.stringify(classes, null, 2);
 
     var blob = new Blob([jsonData], { type: "application/json" });

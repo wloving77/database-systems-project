@@ -155,6 +155,11 @@ async function deleteClassByUsername(pool, classTitle, username) {
     }
     const classId = classResult[0].class_id;
 
+    const [quick] = await connection.execute(
+      `DELETE FROM Assignments WHERE class_id = ?`,
+      [classId]
+    );
+
     // Delete from User_Classes table
     await connection.execute(
       "DELETE FROM User_Classes WHERE username = ? AND class_id = ?",

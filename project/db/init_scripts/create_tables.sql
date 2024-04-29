@@ -4,7 +4,7 @@ CREATE TABLE Users(
     username VARCHAR(255) PRIMARY KEY CHECK (username <> ''),
     password_hash VARCHAR(255) NOT NULL CHECK (password_hash <> ''),
     first_name VARCHAR(255),
-    last_name VARCHAR(255) 
+    last_name VARCHAR(255)
 );
 
 CREATE TABLE Classes(
@@ -15,9 +15,7 @@ CREATE TABLE Classes(
 CREATE TABLE User_Classes (
     username VARCHAR(255),
     class_id int,
-    PRIMARY KEY (username, class_id),
-    FOREIGN KEY (username) REFERENCES Users(username),
-    FOREIGN KEY (class_id) REFERENCES Classes(class_id)
+    PRIMARY KEY (username, class_id)
 );
 
 CREATE TABLE Assignments (
@@ -26,8 +24,7 @@ CREATE TABLE Assignments (
     class_id INT,
     category VARCHAR(255),
     total_points FLOAT,
-    UNIQUE (class_id, title),
-    FOREIGN KEY (class_id) REFERENCES Classes(class_id)
+    UNIQUE (class_id, title)
 );
 
 CREATE TABLE User_Assignment_Grades (
@@ -35,9 +32,7 @@ CREATE TABLE User_Assignment_Grades (
     username VARCHAR(255),
     points_earned FLOAT,
     grade FLOAT,
-    PRIMARY KEY (assignment_id, username),
-    FOREIGN KEY (assignment_id) REFERENCES Assignments(assignment_id),
-    FOREIGN KEY (username) REFERENCES Users(username)
+    PRIMARY KEY (assignment_id, username)
 );
 
 CREATE TABLE User_Category_Grades (
@@ -64,9 +59,7 @@ CREATE TABLE User_Class_Grades (
     class_id INT,
     username VARCHAR(255),
     grade FLOAT,
-    PRIMARY KEY (class_id, username),
-    FOREIGN KEY (class_id) REFERENCES Classes(class_id),
-    FOREIGN KEY (username) REFERENCES Users(username)
+    PRIMARY KEY (class_id, username)
 );
 
 CREATE TABLE Class_Average_Grades (
