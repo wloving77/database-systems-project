@@ -16,7 +16,7 @@ async function getUserByUsername(pool, username) {
     if (rows.length > 0) {
       return rows[0];
     } else {
-      throw new Error(`User with ID ${userId} not found`);
+      return -1;
     }
   } catch (error) {
     console.error("Insert operation failed", error.message);
