@@ -27,11 +27,11 @@ CREATE TABLE Assignments (
     category VARCHAR(255),
     total_points FLOAT,
     UNIQUE (class_id, title),
-    FOREIGN KEY (class_id) REFERENCES User_Classes(class_id)
+    FOREIGN KEY (class_id) REFERENCES Classes(class_id)
 );
 
 CREATE TABLE User_Assignment_Grades (
-    assignment_id INT AUTO_INCREMENT,
+    assignment_id INT,
     username VARCHAR(255),
     points_earned FLOAT,
     grade FLOAT,

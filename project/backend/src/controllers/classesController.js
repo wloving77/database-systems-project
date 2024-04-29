@@ -62,7 +62,7 @@ const addClass = (pool) => async (req, res) => {
     if (success == 1) {
       res.sendStatus(200);
     } else {
-      res.sendStatus(500).json({ error: "Internal Server Error " });
+      res.sendStatus(500);
     }
   } catch (error) {
     throw error;
@@ -82,7 +82,7 @@ const deleteClass = (pool) => async (req, res) => {
     if (success == 1) {
       res.sendStatus(200);
     } else {
-      res.sendStatus(500).json({ error: "Internal Server Error " });
+      res.sendStatus(500);
     }
 
     return;

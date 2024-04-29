@@ -79,13 +79,37 @@ async function addClassByUsername(pool, classTitle, username) {
     // Start a transaction
     await connection.beginTransaction();
 
-    // Insert into Classes table
-    const [classInsertResult] = await connection.execute(
-      "INSERT INTO Classes (class_title) VALUES (?)",
+    // Check if class already exists
+    const [classes] = await connection.execute(
+      "SELECT class_id FROM Classes WHERE class_title = ?",
       [classTitle]
     );
-    const classId = classInsertResult.insertId;
-    console.log("Inserted class with ID:", classId);
+
+    let classId;
+    if (classes.length > 0) {
+      // Class already exists, use existing class_id
+      classId = classes[0].class_id;
+      console.log("Class already exists with ID: ", classId);
+    } else {
+      // Insert into Classes table as it does not exist
+      const [classInsertResult] = await connection.execute(
+        "INSERT INTO Classes (class_title) VALUES (?)",
+        [classTitle]
+      );
+      classId = classInsertResult.insertId;
+      console.log("Inserted new class with ID:", classId);
+    }
+
+    const [alreadyEnrolled] = await connection.execute(
+      "SELECT * FROM User_Classes WHERE username = ? and class_id = ?",
+      [username, classId]
+    );
+
+    if (alreadyEnrolled.length > 0) {
+      //user is already enrolled in this class
+      console.log("User already enrolled in course");
+      return -1;
+    }
 
     // Insert into User_Classes table
     const [userClassInsertResult] = await connection.execute(
@@ -97,12 +121,14 @@ async function addClassByUsername(pool, classTitle, username) {
     // Commit transaction
     await connection.commit();
 
-    return 1;
+    return 1; // Indicating success
   } catch (error) {
+    // Rollback in case of an error
     if (connection) await connection.rollback();
     console.error("Error in addClassByUsername:", error);
     return -1; // Indicating failure
   } finally {
+    // Always release the connection
     if (connection) await connection.release();
   }
 }

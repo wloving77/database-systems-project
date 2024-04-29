@@ -12,11 +12,13 @@
     <script src="../js/ui.js"></script>
   </head>
   <body>
+    <input type="hidden" id="hiddenClassID" value="" />
+
     <div class="modal fade" id="modal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 id="modal-title" class="modal-title">Login</h5>
+            <h5 id="modal-title" class="modal-title">Add Assignment?</h5>
             <button
               type="button"
               class="btn-close"
@@ -31,9 +33,8 @@
               style="display: none"
             ></div>
             <h6 id="modal-header" class="card-subtitle mb-2 text-muted">
-              Please enter your username and password
+              Please Fill Out Assignment Info
             </h6>
-            <!-- Login Form -->
             <form
               id="assignment-add-form"
               class="needs-validation"
@@ -42,28 +43,93 @@
             >
               <div class="mb-3">
                 <label for="input-assignment-name" class="form-label"
-                  >Username</label
+                  >Assignment Name</label
                 >
                 <input
                   type="text"
                   class="form-control"
-                  id="input-username-login"
+                  id="input-assignment-name"
                   required
                 />
-                <div class="invalid-feedback">Please enter a username</div>
+                <div class="invalid-feedback">
+                  Please type a valid assignment name
+                </div>
               </div>
               <div class="mb-3">
-                <label for="input-password-login" class="form-label"
-                  >Password</label
+                <label for="input-assignment-name" class="form-label"
+                  >Assignment Category</label
                 >
                 <input
-                  type="password"
+                  type="text"
                   class="form-control"
-                  id="input-password-login"
+                  id="input-assignment-category"
                   required
                 />
-                <div class="invalid-feedback">Please enter a password</div>
+                <div class="invalid-feedback">Please fill out all fields</div>
               </div>
+              <div class="mb-3">
+                <label for="total-assignment-points" class="form-label"
+                  >Total Available Points</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="total-assignment-points"
+                  required
+                />
+                <div class="invalid-feedback">Please fill out all fields</div>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <form
+              id="assignment-grade-add-form"
+              class="needs-validation"
+              novalidate
+              onsubmit="handleGradeAdd(event)"
+            >
+              <div class="mb-3">
+                <label for="input-assignment-id" class="form-label"
+                  >Assignment ID</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="input-assignment-id"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Please type a valid assignment name
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="input-points-earned" class="form-label"
+                  >Points Earned</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="input-points-earned"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Please type a valid assignment name
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="input-grade" class="form-label"
+                  >Grade (Out of 100)</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="input-grade"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Please type a valid assignment name
+                </div>
+              </div>
+
               <button type="submit" class="btn btn-primary">Submit</button>
             </form>
           </div>
@@ -86,8 +152,6 @@
                   <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Title</th>
-                    <th scope="col">Points Earned</th>
-                    <th scope="col">Grade</th>
                   </tr>
                 </thead>
                 <tbody id="assignments-table"></tbody>
@@ -96,7 +160,7 @@
                 id="add-assignment-button"
                 data-bs-toggle="modal"
                 data-bs-target="#modal"
-                onclick="prepareAssignmentAdd(event)"
+                onclick="handleAssignmentEvent(event)"
               >
                 Add Assignment
               </button>
@@ -130,6 +194,8 @@
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const id = urlParams.get("class");
+        const idStore = document.getElementById("hiddenClassID");
+        idStore.value = id;
         displayClass(id);
       });
     </script>
