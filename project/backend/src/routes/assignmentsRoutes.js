@@ -10,5 +10,9 @@ module.exports = function (pool) {
 
   router.get("/all", assignmentsController.getAllAssignments(pool));
 
+  router.post("/addAssignment", assignmentsController.addAssignment(pool));
+
+  router.post("/addGrade", assignmentsController.addGrade(pool));
+
   return router;
 };

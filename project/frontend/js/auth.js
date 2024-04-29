@@ -48,9 +48,10 @@ const auth = {
     if (!response.ok) {
       errorMsg.innerHTML = responseData.error;
       errorMsg.style.display = "block";
-      throw new Error(
+      console.log(
         `Error Processing Login Request, Server Responded With ${response.status}`
       );
+      return;
     }
 
     //set session storage:
@@ -104,6 +105,13 @@ const auth = {
       body: JSON.stringify(authData),
     });
 
+    if (response.status == 409) {
+      errorMsg.innerHTML =
+        "User Already Exists, Please Choose a Different Username";
+      errorMsg.style.display = "block";
+      return;
+    }
+
     if (!response.ok) {
       throw new Error(
         `Error Processing Signup Request, Server Responded With ${response.status}`
@@ -135,19 +143,23 @@ const uiAuth = {
     if (target_id == "profile_login") {
       const loginForm = document.getElementById("login-form");
       const signupForm = document.getElementById("signup-form");
+      const classAddForm = document.getElementById("class-add-form");
       const modalTitle = document.getElementById("modal-title");
       const modalHeader = document.getElementById("modal-header");
       loginForm.style.display = "block";
       signupForm.style.display = "none";
+      classAddForm.style.display = "none";
       modalTitle.innerHTML = "Login";
       modalHeader.innerHTML = "Please Enter your Username and Password";
     } else if (target_id == "profile_signup") {
       const loginForm = document.getElementById("login-form");
       const signupForm = document.getElementById("signup-form");
+      const classAddForm = document.getElementById("class-add-form");
       const modalTitle = document.getElementById("modal-title");
       const modalHeader = document.getElementById("modal-header");
       loginForm.style.display = "none";
       signupForm.style.display = "block";
+      classAddForm.style.display = "none";
       modalTitle.innerHTML = "Signup";
       modalHeader.innerHTML = "Please Choose a Username and Password";
     }

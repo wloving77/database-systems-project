@@ -50,6 +50,13 @@ const handleUserSignup = (pool) => {
     try {
       const { username, password, first_name, last_name } = req.body;
 
+      /* Check if user already exists */
+
+      const userExists = await userModel.getUserByUsername(pool, username);
+      if (userExists != -1) {
+        res.send(409);
+      }
+
       /* HERE WE WOULD HASH THE PASSWORD */
 
       const password_hash = password;
