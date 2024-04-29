@@ -12,6 +12,65 @@
     <script src="../js/ui.js"></script>
   </head>
   <body>
+    <div class="modal fade" id="modal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 id="modal-title" class="modal-title">Login</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" id="login-container">
+            <div
+              class="alert alert-danger"
+              id="error-message"
+              style="display: none"
+            ></div>
+            <h6 id="modal-header" class="card-subtitle mb-2 text-muted">
+              Please enter your username and password
+            </h6>
+            <!-- Login Form -->
+            <form
+              id="assignment-add-form"
+              class="needs-validation"
+              novalidate
+              onsubmit="handleAssignmentAdd(event)"
+            >
+              <div class="mb-3">
+                <label for="input-assignment-name" class="form-label"
+                  >Username</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="input-username-login"
+                  required
+                />
+                <div class="invalid-feedback">Please enter a username</div>
+              </div>
+              <div class="mb-3">
+                <label for="input-password-login" class="form-label"
+                  >Password</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="input-password-login"
+                  required
+                />
+                <div class="invalid-feedback">Please enter a password</div>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="container-fluid">
       <h1 class="display-3" id="title"></h1>
 
@@ -33,6 +92,14 @@
                 </thead>
                 <tbody id="assignments-table"></tbody>
               </table>
+              <button
+                id="add-assignment-button"
+                data-bs-toggle="modal"
+                data-bs-target="#modal"
+                onclick="prepareAssignmentAdd(event)"
+              >
+                Add Assignment
+              </button>
             </div>
           </div>
         </div>
