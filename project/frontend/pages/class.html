@@ -10,8 +10,51 @@
     <link href="../styles/main.less" rel="stylesheet" />
     <!-- ui functions -->
     <script src="../js/ui.js"></script>
+
+    <script>
+      function updateUIForLoggedInUser(user) {
+        // Set the logged-in username in session storage and the input field
+        const loggedInUser = window.sessionStorage.getItem("user");
+        document.getElementById("username").value = loggedInUser;
+      }
+    </script>
   </head>
   <body>
+    <nav
+      class="navbar navbar-expand-sm navbar-light"
+      style="background-color: #e3f2fd"
+    >
+      <div class="container-fluid">
+        <a class="navbar-brand mb-o h1" href="../index.html"
+          >Grade Calculator</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarContent"
+          aria-expanded="false"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- navbar links -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <div class="navbar-nav me-auto mb-2 mb-lg-0">
+            <div class="input-group" style="width: 300px">
+              <span class="input-group-text" id="basic-addon1">@</span>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Username"
+                readonly
+                id="username"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
     <input type="hidden" id="hiddenClassID" value="" />
 
     <div class="modal fade" id="modal" tabindex="-1" aria-hidden="true">
@@ -146,12 +189,13 @@
         <div class="row py-3">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Assignment Grades</h5>
+              <h5 class="card-title">Assignments:</h5>
               <table class="table table-striped">
                 <thead>
                   <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Title</th>
+                    <th scope="col">Total Points</th>
                   </tr>
                 </thead>
                 <tbody id="assignments-table"></tbody>
@@ -171,17 +215,16 @@
         <div class="row py-3">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Category Grades</h5>
+              <h5 class="card-title">Class Assignment Grades</h5>
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th scope="col">Category</th>
+                    <th scope="col">Assignment ID</th>
                     <th scope="col">Points Earned</th>
-                    <th scope="col">Grade</th>
-                    <th scope="col">Class Average</th>
+                    <th scope="col">Total Points</th>
                   </tr>
                 </thead>
-                <tbody id="categories-table"></tbody>
+                <tbody id="assignment-grades-table"></tbody>
               </table>
             </div>
           </div>
@@ -197,6 +240,62 @@
         const idStore = document.getElementById("hiddenClassID");
         idStore.value = id;
         displayClass(id);
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const loggedInUser = window.sessionStorage.getItem("user");
+
+        if (loggedInUser) {
+          updateUIForLoggedInUser(loggedInUser);
+        } else {
+          updateUIForLoggedOutUser();
+        }
+      });
+
+      async function displayAssignmentsByClass(user, id) {
+        const url = `http://localhost:3000/grades/get/assignment-grades/${user}/${id}`;
+
+        try {
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          const data = await response.json();
+
+          const assignmentTable = document.getElementById(
+            "assignment-grades-table"
+          );
+
+          data.forEach(function (gradeInfo) {
+            var row = document.createElement("tr");
+
+            var assignmentName = document.createElement("td");
+            assignmentName.textContent = gradeInfo.title;
+            row.appendChild(assignmentName);
+
+            var pointsEarned = document.createElement("td");
+            pointsEarned.textContent =
+              gradeInfo.points_earned > 0 ? gradeInfo.points_earned : "?";
+            row.appendChild(pointsEarned);
+
+            var totalPoints = document.createElement("td");
+            totalPoints.textContent = gradeInfo.total_points;
+            row.appendChild(totalPoints);
+
+            assignmentTable.appendChild(row);
+          });
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const user = window.sessionStorage.getItem("user");
+        const id = document.getElementById("hiddenClassID").value;
+        displayAssignmentsByClass(user, id);
       });
     </script>
 

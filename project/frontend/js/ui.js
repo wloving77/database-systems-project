@@ -101,13 +101,17 @@ async function displayClass(class_id) {
     assignments.forEach(function (assignmentInfo) {
       var row = document.createElement("tr");
 
-      var id = document.createElement("th");
+      var id = document.createElement("td");
       id.textContent = assignmentInfo.assignment_id;
       row.appendChild(id);
 
       var title = document.createElement("td");
       title.textContent = assignmentInfo.title;
       row.appendChild(title);
+
+      var totalPoints = document.createElement("td");
+      totalPoints.textContent = assignmentInfo.totalPoints;
+      row.appendChild(totalPoints);
 
       var button = document.createElement("button");
       button.innerHTML = "Add Grade";
@@ -457,11 +461,14 @@ async function handleGradeAdd(event) {
     });
 
     if (response.ok) {
-      console.log(`Grade Successfully added for class: ${class_id}!`);
+      console.log(`Grade Successfully added for assignment ${assignmentID}!`);
+      location.reload();
     } else {
-      console.log(`Error adding grade for ${class_id}`);
+      console.log(`Error adding grade for assignment ${assignmentID}`);
     }
   } catch (error) {
     console.error(error);
   }
 }
+
+async function displayAssignmentsByClass(user, class_id) {}
